@@ -94,7 +94,7 @@ is_admin		BOOLEAN		DEFAULT 0
 
 reg_no			VARCHAR(50)	NOT NULL
 
-email 			VARCHAR(254)	NOT NULL
+email 			VARCHAR(254)	NOT NULL    UNIQUE
 
 hashed_password 	VARCHAR(255)	NOT NULL
 
@@ -122,7 +122,7 @@ native_city		VARCHAR(50)
 
 created_at		TIMESTAMP	DEFAULT CURRENT_TIMESTAMP
 
-
+UNIQUE(college_id, reg_no)
 
 --blog_images Table--------------------------------------------------
 
