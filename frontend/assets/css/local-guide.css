@@ -1,0 +1,26 @@
+select {
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+#places {
+  margin-top: 20px;
+}
+
+.place-card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.place-card h4 {
+  margin-bottom: 5px;
+}
+
+.rating {
+  color: #f59e0b;
+  font-weight: bold;
+}

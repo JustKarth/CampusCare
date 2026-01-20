@@ -121,9 +121,16 @@ class User {
 
   // Check if email domain matches a college domain
   static async findCollegeByEmailDomain(email) {
-    const domain = email.split('@')[1];
+    const rawDomain = email.split('@')[1];
+    if (!rawDomain) return null;
+
+    // Accept domains stored with or without leading '@' in DB (e.g. 'mnnit.ac.in' or '@mnnit.ac.in')
+    const domain = rawDomain.toLowerCase().replace(/^@+/, '');
+
     const [rows] = await pool.execute(
-      'SELECT college_id, college_name, email_domain FROM colleges WHERE email_domain = ?',
+      `SELECT college_id, college_name, email_domain
+       FROM colleges
+       WHERE REPLACE(email_domain, '@', '') = ?`,
       [domain]
     );
     return rows[0] || null;
