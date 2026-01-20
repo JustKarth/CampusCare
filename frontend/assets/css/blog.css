@@ -1,0 +1,68 @@
+.create-blog {
+  background: #f9f9fb;
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+}
+
+.create-blog h4 {
+  margin-bottom: 0.8rem;
+}
+
+.create-blog input,
+.create-blog textarea {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+.create-blog textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.create-blog button {
+  background: linear-gradient(135deg, #7b2ff7, #ff4f9a);
+  border: none;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.blog-list .blog-card {
+  background: #ffffff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+}
+
+.blog-card h5 {
+  margin-bottom: 0.5rem;
+}
+
+.blog-card p {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.blog-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  color: #ff4f9a;
+  cursor: pointer;
+  font-weight: 600;
+}

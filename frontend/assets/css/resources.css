@@ -1,0 +1,14 @@
+#resources a {
+  display: block;
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #2563eb;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+#resources a:hover {
+  background: #eef2ff;
+}
