@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blog | CampusCare</title>
+
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/blog.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>CampusCare</h2>
+
+    <button class="tab-btn" data-tab="overview">Dashboard</button>
+    <button class="tab-btn active" data-tab="profile">Blogs</button>
+    <button class="tab-btn" data-tab="resources">Resources</button>
+    <button class="tab-btn" data-tab="complaints">Local Guide</button>
+
+    <button id="logoutSidebar" class="logout">Logout</button>
+  </aside>
+
+  <!-- Blog Content -->
+  <main class="content">
+
+    <h3>Campus Blog</h3>
+
+    <!-- Create Blog -->
+    <section class="create-blog">
+      <h4>Create New Blog</h4>
+      <input type="text" id="blogTitle" placeholder="Blog title" />
+      <textarea id="blogContent" placeholder="Write your blog..."></textarea>
+      <button id="postBlog">Post Blog</button>
+    </section>
+
+    <!-- Blog List -->
+    <section id="blogList" class="blog-list">
+      Loading blogs...
+    </section>
+
+  </main>
+
+</div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/comments.js"></script>
+  <script src="../js/blogs.js"></script>
+</body>
+</html>
