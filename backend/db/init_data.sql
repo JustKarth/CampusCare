@@ -52,7 +52,7 @@ INSERT INTO states (state_name) VALUES
 ('UT : Lakshadweep'),
 ('UT : Puducherry');
 
-INSERT INTO colleges (college_id, email_domain, college_name, city, state_id) VALUES (1, '@mnnit.ac.in', 'Motilal Nehru National Institute of Technology Allahabad', 'Prayagraj', 26);
+INSERT INTO colleges (college_id, email_domain, college_name, city, state_id) VALUES (1, 'mnnit.ac.in', 'Motilal Nehru National Institute of Technology Allahabad', 'Prayagraj', 26);
 
 INSERT INTO courses (college_id, course_name) VALUES
 (1, 'B.Tech. in Computer Science and Engineering'),
