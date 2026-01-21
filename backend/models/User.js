@@ -37,6 +37,7 @@ class User {
       native_city = null
     } = userData;
 
+    // Convert undefined to null for optional fields (MySQL doesn't accept undefined)
     const [result] = await pool.execute(
       `INSERT INTO user_profiles 
       (email, hashed_password, reg_no, first_name, middle_name, last_name, 
@@ -48,15 +49,15 @@ class User {
         hashed_password,
         reg_no,
         first_name,
-        middle_name,
+        middle_name ?? null,
         last_name,
         college_id,
         course_id,
         graduation_year,
         date_of_birth,
-        avatar_id,
-        native_state_id,
-        native_city
+        avatar_id ?? 1,
+        native_state_id ?? null,
+        native_city ?? null
       ]
     );
 
