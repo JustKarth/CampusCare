@@ -120,7 +120,10 @@ async function loadPlaces(category = "") {
 async function submitRating(placeId) {
   // Must be a logged-in student
   const token = requireAuth("index.html");
-  if (!token) return;
+  if (!token) {
+    alert("Please login to submit a rating. (Guest browsing enabled.)");
+    return;
+  }
 
   const select = document.querySelector(
     `.rating-select[data-place-id="${placeId}"]`
