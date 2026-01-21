@@ -4,6 +4,10 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 
+// Initialize database connection pool
+// This ensures the database connection is established when the app starts
+require('./config/database');
+
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');

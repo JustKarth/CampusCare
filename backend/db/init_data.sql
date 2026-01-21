@@ -1,4 +1,4 @@
-USE campus_care;
+/*USE campus_care;*/
 
 /*
 INSERT INTO avatars (avatar_url) VALUES 
