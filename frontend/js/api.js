@@ -44,17 +44,31 @@ async function apiRequest(endpoint, method = "GET", body = null, token = null) {
     headers["Authorization"] = `Bearer ${resolvedToken}`;
   }
 
-  const res = await fetch(`${getApiBaseUrl()}${endpoint}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : null
-  });
+  let res;
+  try {
+    res = await fetch(`${getApiBaseUrl()}${endpoint}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : null
+    });
+  } catch (fetchError) {
+    // Network error - server not reachable
+    const error = new Error("Failed to fetch");
+    error.status = 0;
+    error.data = { message: "Could not connect to server. Please ensure the backend is running." };
+    throw error;
+  }
 
   let data;
   try {
-    data = await res.json();
-  } catch {
-    data = {};
+    const text = await res.text();
+    data = text ? JSON.parse(text) : {};
+  } catch (parseError) {
+    // Response is not JSON
+    data = {
+      message: res.statusText || "Server returned an invalid response",
+      status: res.status
+    };
   }
 
   if (!res.ok) {

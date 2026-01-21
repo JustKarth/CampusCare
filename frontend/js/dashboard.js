@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Soft-auth: dashboard can be viewed as guest (limited info)
-  // const token = requireAuth("index.html");
+  // Hard-auth: require a valid token to view the dashboard.
+  // If no token is present, redirect to the login page.
+  const token = getToken && typeof getToken === "function" ? getToken() : null;
+  if (!token) {
+    window.location.href = "login.html";
+    return;
+  }
 
   const currentPage = window.location.pathname
     .split("/")
