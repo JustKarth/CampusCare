@@ -8,10 +8,6 @@ function escapeHtml(str) {
 }
 
 async function loadResources() {
-  // Require student login (GET /api/resources is auth-only)
-  const token = requireAuth("index.html");
-  if (!token) return;
-
   const container = document.getElementById("resources");
   if (!container) return;
 
@@ -37,7 +33,8 @@ async function loadResources() {
       .join("");
   } catch (e) {
     if (e?.status === 401) {
-      logout("index.html");
+      container.innerHTML =
+        "<p>Please login to view resources. (Guest browsing enabled.)</p>";
       return;
     }
     container.innerHTML = `<p>Failed to load resources: ${escapeHtml(e.message)}</p>`;
