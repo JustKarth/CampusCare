@@ -90,3 +90,19 @@ DELETE FROM academic_resources where resource_id = <id>l
 --Local Guide Model-------------------------------------
 
 #1 fetching categories
+SELECT * FROM local_guide_categories;
+
+#2 fetching places for a college and a category
+SELECT place_id, place_name, place_description, address, distance, website, phone FROM places WHERE college_id = <clgid> AND category_id = <categoryid>;
+
+#3 Add rating
+INSERT INTO place_rating (place_id, user_id, rating) VALUES (<placeid>, <userid>, <rating>);
+
+#4 Get user rating
+SELECT AVG(rating) FROM place_rating WHERE place_id = <placeid>;
+
+#5 Create a place
+INSERT INTO places (category_id, college_id, place_name, place_description, address, distance, website, phone) VALUES (<categoryid>, <clgid>, <name>, <desc>, <address>, <distance>, <website>, <phone>);
+
+#6 Delete a place 
+DELETE FROM places WHERE place_id = <id>;
