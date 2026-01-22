@@ -1,7 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+<<<<<<< HEAD
   // Require login for dashboard
   const token = requireAuth("index.html");
   if (!token) return;
+=======
+  // Soft-auth: dashboard can be viewed as guest (limited info)
+  // const token = requireAuth("index.html");
+>>>>>>> main
 
   const currentPage = window.location.pathname
     .split("/")
@@ -61,6 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashCourseEl) dashCourseEl.textContent = courseName;
     const dashGradYearEl = document.getElementById("dashGradYear");
     if (dashGradYearEl) dashGradYearEl.textContent = user.graduationYear || "";
+<<<<<<< HEAD
+=======
+  } else {
+    // Guest view defaults
+    const colNameEl = document.querySelector(".college-name");
+    if (colNameEl) colNameEl.textContent = "< College Name >";
+    const userNameEl = document.getElementById("userName");
+    if (userNameEl) userNameEl.textContent = "Guest";
+>>>>>>> main
   }
 
   // Logout button

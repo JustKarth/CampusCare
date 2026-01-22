@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 {
+=======
+""{
+>>>>>>> main
   "name": "campuscare-backend",
   "version": "1.0.0",
   "description": "Campus Care API Backend",
@@ -6,7 +10,13 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+<<<<<<< HEAD
     "test": "node test-server.js"
+=======
+    "test": "node test-server.js",
+    "init-db": "node scripts/init-database.js",
+    "test-db": "node test-db-connection.js"
+>>>>>>> main
   },
   "keywords": [],
   "author": "",

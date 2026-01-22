@@ -15,8 +15,13 @@ import { EmptyState } from '../components/common/EmptyState';
 
 export function BlogViewPage() {
   const { id } = useParams();
+<<<<<<< HEAD
   const { blog, loading: blogLoading, error: blogError, likeBlog } = useBlog(id);
   const { comments, loading: commentsLoading, error: commentsError } = useComments(id);
+=======
+  const { blog, loading: blogLoading, error: blogError, likeBlog, hasLiked, loadingLikeStatus } = useBlog(id);
+  const { comments, loading: commentsLoading, error: commentsError, deleteComment, deletingComments } = useComments(id);
+>>>>>>> main
 
   if (blogLoading) {
     return (
@@ -56,16 +61,47 @@ export function BlogViewPage() {
           <h2 className="text-xl md:text-2xl mb-6">Blog</h2>
           
           <div className="card mb-6 fade-in">
+<<<<<<< HEAD
             <h3 className="text-xl md:text-2xl font-semibold mb-4 text-gray-800">{escapeHtml(blog.blog_title)}</h3>
             <p className="text-gray-700 whitespace-pre-wrap mb-4 text-sm md:text-base leading-relaxed">
               {escapeHtml(blog.blog_content)}
+=======
+            <h3 className="text-xl md:text-2xl font-semibold mb-4 text-gray-800">{escapeHtml(blog.blogTitle)}</h3>
+            <p className="text-gray-700 whitespace-pre-wrap mb-4 text-sm md:text-base leading-relaxed">
+              {escapeHtml(blog.blogContent)}
+>>>>>>> main
             </p>
             <div className="flex items-center gap-4 pt-4 border-t">
               <button
                 onClick={likeBlog}
+<<<<<<< HEAD
                 className="text-pink-600 font-semibold hover:text-pink-700 transition-colors"
               >
                 ❤️ {blog.like_count || 0}
+=======
+                disabled={loadingLikeStatus}
+                className={`font-semibold transition-all duration-200 transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
+                  hasLiked 
+                    ? 'text-red-600 hover:text-red-700' 
+                    : 'text-pink-600 hover:text-pink-700'
+                }`}
+                title={hasLiked ? 'Unlike' : 'Like'}
+                aria-label={hasLiked ? 'Unlike this blog' : 'Like this blog'}
+              >
+                {loadingLikeStatus ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="animate-spin">⏳</span>
+                    <span>{blog.likeCount || 0}</span>
+                  </span>
+                ) : (
+                  <>
+                    <span className="inline-block transition-transform duration-200 hover:rotate-12">
+                      {hasLiked ? '❤️' : '🤍'}
+                    </span>
+                    <span className="ml-1">{blog.likeCount || 0}</span>
+                  </>
+                )}
+>>>>>>> main
               </button>
             </div>
           </div>
@@ -87,7 +123,16 @@ export function BlogViewPage() {
           ) : (
             <div className="card mb-6 fade-in">
               {comments.map((comment, index) => (
+<<<<<<< HEAD
                 <CommentCard key={comment.comment_id || index} comment={comment} />
+=======
+                <CommentCard 
+                  key={comment.commentId || index} 
+                  comment={comment} 
+                  onDelete={deleteComment}
+                  isDeleting={deletingComments?.has(comment.commentId) || false}
+                />
+>>>>>>> main
               ))}
             </div>
           )}

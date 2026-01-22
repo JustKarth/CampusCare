@@ -25,7 +25,12 @@ function logout(redirectTo = "index.html") {
 function requireAuth(redirectTo = "index.html") {
   const token = getToken();
   if (!token) {
+<<<<<<< HEAD
     logout(redirectTo);
+=======
+    // Soft-auth mode: allow browsing without being logged in.
+    // Pages can check for null and show limited/guest experience.
+>>>>>>> main
     return null;
   }
   return token;

@@ -18,25 +18,51 @@ import { BlogCardSkeleton } from '../components/common/SkeletonLoader';
 // Replaces: blog.html + blogs.js
 
 export function BlogsPage() {
+<<<<<<< HEAD
   const { blogs, loading, error, likeBlog } = useBlogs();
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearch = useDebounce(searchTerm, 300);
 
   // Filter blogs based on search term
+=======
+  const { blogs, loading, error, likeBlog, likedBlogs, likingBlogs, pagination, goToPage: goToBlogPage } = useBlogs();
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearch = useDebounce(searchTerm, 300);
+
+  // Filter blogs based on search term (client-side filtering for search)
+>>>>>>> main
   const filteredBlogs = useMemo(() => {
     if (!debouncedSearch.trim()) return blogs;
     
     const searchLower = debouncedSearch.toLowerCase();
     return blogs.filter((blog) => {
+<<<<<<< HEAD
       const title = escapeHtml(blog.blog_title || '').toLowerCase();
       const content = escapeHtml(blog.blog_content || '').toLowerCase();
+=======
+      const title = escapeHtml(blog.blogTitle || '').toLowerCase();
+      const content = escapeHtml(blog.blogContent || '').toLowerCase();
+>>>>>>> main
       return title.includes(searchLower) || content.includes(searchLower);
     });
   }, [blogs, debouncedSearch]);
 
+<<<<<<< HEAD
   // Pagination
   const { paginatedItems, currentPage, totalPages, goToPage, hasNextPage, hasPrevPage } = 
     usePagination(filteredBlogs, 10);
+=======
+  // Use server-side pagination if no search, otherwise use client-side pagination for search results
+  const useServerPagination = !debouncedSearch.trim();
+  const { paginatedItems, currentPage, totalPages, goToPage } = useServerPagination
+    ? { 
+        paginatedItems: blogs, 
+        currentPage: pagination.page, 
+        totalPages: pagination.totalPages, 
+        goToPage: goToBlogPage 
+      }
+    : usePagination(filteredBlogs, 10);
+>>>>>>> main
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -84,7 +110,17 @@ export function BlogsPage() {
             <>
               <div className="fade-in">
                 {paginatedItems.map((blog) => (
+<<<<<<< HEAD
                   <BlogCard key={blog.blog_id} blog={blog} onLike={likeBlog} />
+=======
+                  <BlogCard 
+                    key={blog.blogId} 
+                    blog={blog} 
+                    onLike={likeBlog}
+                    isLiked={likedBlogs?.has(blog.blogId) || false}
+                    isLiking={likingBlogs?.has(blog.blogId) || false}
+                  />
+>>>>>>> main
                 ))}
               </div>
               {totalPages > 1 && (

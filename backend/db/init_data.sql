@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 USE campus_care;
+=======
+/*USE campus_care;*/
+>>>>>>> main
 
 /*
 INSERT INTO avatars (avatar_url) VALUES 

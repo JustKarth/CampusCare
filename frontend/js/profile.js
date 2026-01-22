@@ -1,8 +1,11 @@
 (async function () {
+<<<<<<< HEAD
   // Require login to view profile
   const token = requireAuth("index.html");
   if (!token) return;
 
+=======
+>>>>>>> main
   const setText = (id, value) => {
     const el = document.getElementById(id);
     if (el) el.textContent = value ?? "";
@@ -20,9 +23,18 @@
     setText("course", u.courseName || u.courseId);
     setText("gradYear", u.graduationYear);
   } catch (err) {
+<<<<<<< HEAD
     // If token expired/invalid, kick back to login
     if (err?.status === 401) {
       logout("index.html");
+=======
+    if (err?.status === 401) {
+      setText("name", "Guest");
+      setText("email", "Login required");
+      setText("college", "-");
+      setText("course", "-");
+      setText("gradYear", "-");
+>>>>>>> main
       return;
     }
     alert(err?.message || "Failed to load profile.");
