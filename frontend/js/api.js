@@ -44,6 +44,19 @@ async function apiRequest(endpoint, method = "GET", body = null, token = null) {
     headers["Authorization"] = `Bearer ${resolvedToken}`;
   }
 
+<<<<<<< HEAD
+  const res = await fetch(`${getApiBaseUrl()}${endpoint}`, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : null
+  });
+
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+=======
   let res;
   try {
     res = await fetch(`${getApiBaseUrl()}${endpoint}`, {
@@ -69,6 +82,7 @@ async function apiRequest(endpoint, method = "GET", body = null, token = null) {
       message: res.statusText || "Server returned an invalid response",
       status: res.status
     };
+>>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   }
 
   if (!res.ok) {
