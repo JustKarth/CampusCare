@@ -37,11 +37,21 @@ export function useLocalGuide() {
           ? `/local-guide/places/${encodeURIComponent(selectedCategory)}`
           : '/local-guide/places';
         
+<<<<<<< HEAD
+        // If logged in, backend infers collegeId from token (don't add query param)
+        // If not logged in, add collegeId query param
+        const url = user?.collegeId ? endpoint : `${endpoint}?collegeId=1`;
+        
+        // Pass token if user is logged in (for optional auth)
+        const token = user ? true : null;
+        const res = await apiRequest(url, 'GET', null, token);
+=======
         // If logged in, backend infers collegeId from token
         // Otherwise fall back to default collegeId=1
         const url = user?.collegeId ? endpoint : `${endpoint}?collegeId=1`;
         
         const res = await apiRequest(url, 'GET');
+>>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
         setPlaces(res.places || []);
       } catch (err) {
         setError(err.message || 'Failed to load places');
@@ -62,7 +72,12 @@ export function useLocalGuide() {
         ? `/local-guide/places/${encodeURIComponent(selectedCategory)}`
         : '/local-guide/places';
       const url = user?.collegeId ? endpoint : `${endpoint}?collegeId=1`;
+<<<<<<< HEAD
+      const token = user ? true : null;
+      const res = await apiRequest(url, 'GET', null, token);
+=======
       const res = await apiRequest(url, 'GET');
+>>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
       setPlaces(res.places || []);
       return { success: true };
     } catch (err) {

@@ -55,6 +55,14 @@ document.getElementById("registerForm")?.addEventListener("submit", async e => {
     native_city: nativeCityEl?.value?.trim() || undefined
   };
 
+<<<<<<< HEAD
+  try {
+    await apiRequest("/auth/register", "POST", payload);
+    alert("Registration successful! Please login.");
+    window.location.href = "index.html";
+  } catch (err) {
+    alert(formatApiError(err));
+=======
   // Validate required fields
   if (!payload.email || !payload.password || !payload.reg_no || !payload.first_name || 
       !payload.last_name || !payload.course_id || !payload.graduation_year || !payload.date_of_birth) {
@@ -97,6 +105,7 @@ document.getElementById("registerForm")?.addEventListener("submit", async e => {
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText || "Register";
     }
+>>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   }
 });
 
@@ -107,6 +116,21 @@ document.getElementById("loginForm")?.addEventListener("submit", async e => {
   const emailEl = document.getElementById("email");
   const passwordEl = document.getElementById("password");
 
+<<<<<<< HEAD
+  try {
+    const res = await apiRequest("/auth/login", "POST", {
+      email: emailEl?.value?.trim(),
+      password: passwordEl?.value
+    });
+
+    setToken(res.token);
+    localStorage.setItem("user", JSON.stringify(res.user));
+    if (res.user?.collegeName) localStorage.setItem("collegeName", res.user.collegeName);
+
+    window.location.href = "dashboard.html";
+  } catch (err) {
+    alert(formatApiError(err));
+=======
   const email = emailEl?.value?.trim();
   const password = passwordEl?.value;
 
@@ -156,5 +180,6 @@ document.getElementById("loginForm")?.addEventListener("submit", async e => {
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText || "Login";
     }
+>>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   }
 });
