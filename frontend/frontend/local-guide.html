@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Local Guide | CampusCare</title>
+  <link rel="stylesheet" href="../assets/css/local-guide.css" />
+  <link rel="stylesheet" href="../assets/css/main.css"/>
+
+</head>
+<body>
+
+  <h2>Local Guide</h2>
+
+  <select id="categorySelect">
+    <option value="">All Categories</option>
+    <option value="healthcare">Healthcare</option>
+    <option value="food">Food</option>
+    <option value="tech">Tech</option>
+    <option value="clothing">Clothing</option>
+    <option value="logistics">Logistics</option>
+  </select>
+
+  <button onclick="filterPlaces()">Search</button>
+
+  <div id="places">
+    <!-- Places will load here -->
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/localGuide.js"></script>
+
+</body>
+</html>
