@@ -17,6 +17,9 @@ SELECT is_moderator, is_admin, reg_no, email, avatar_id, date_of_birth, first_na
 #6 findCollegeByEmailDomain
 SELECT college_id, college_name, city, state_id FROM colleges WHERE email_domain = <domain>;
 
+#7 getAvatarUrl
+SELECT avatar_url FROM avatars WHERE avatar_id = <avatar_id>;
+
 --BLOG MODEL--------------------------
 
 #1.a. findAll
@@ -49,7 +52,7 @@ Must be done in a transaction using LAST_INSERT_ID() to avoid race conditions. -
 --COMMENT MODEL------------------------------------
 #1 FIND BY BLOG ID
 
-SELECT comment_id, user_id, comment_content, created_at FROM blog_comments WHERE blog_id = <id>;
+SELECT comment_id, user_id, comment_content, created_at FROM blog_comments WHERE blog_id = <id> ORDER BY created_at ASC LIMIT <limit> OFFSET <pageno-1>*<limit>;
 
 #2 create comment
 
