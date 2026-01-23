@@ -1,5 +1,4 @@
-/*USE campus_care;*/
-
+--THIS DATA IS FOR ALL THE FIELDS THAT ARE CONTROLLED PURELY BY DEVELOPERS AND HAVE NO RELATION WITH THE COLLEGE ADMIN OR END USERS
 
 INSERT IGNORE INTO avatars (avatar_url) VALUES 
 ('/avatars/Fox.jpeg'),
@@ -21,16 +20,9 @@ INSERT IGNORE INTO local_guide_categories (category_name) VALUES
 ('Miscellaneous');
 
 /*
-INSERT IGNORE INTO academic_resources (college_id, resource_title, resource_description, resource_link) VALUES
-(1, '<title>', '<description>', '<link>');
-/
 INSERT INTO places (category_id, college_id, place_name, place_description, address, distance, website, phone) VALUES
 (<category_id>, 1, <name>, <description>, <address>, <distance>, <website>, <phone>);
 */ 
-
--- Minimum required reference data (safe to re-run)
-
-
 
 INSERT IGNORE INTO states (state_name) VALUES
 ('Andhra Pradesh'),
@@ -71,18 +63,10 @@ INSERT IGNORE INTO states (state_name) VALUES
 ('UT : Puducherry');
 
 -- Email domain should be stored without '@' (backend matches both, but this is the clean format)
-INSERT IGNORE INTO colleges (college_id, email_domain, college_name, city, state_id) VALUES (1, 'mnnit.ac.in', 'Motilal Nehru National Institute of Technology Allahabad', 'Prayagraj', 26);
+INSERT IGNORE INTO colleges (college_id, email_domain, college_name, city, state_id) VALUES 
+(1, 'mnnit.ac.in', 'Motilal Nehru National Institute of Technology Allahabad', 'Prayagraj', 26);
 
-INSERT IGNORE INTO courses (college_id, course_name) VALUES
-(1, 'B.Tech. in Computer Science and Engineering'),
-(1, 'B.Tech. in Electronics and Communication Engineering'),
-(1, 'B.Tech. in Electrical Engineering'),
-(1, 'B.Tech. in Mechanical Engineering'),
-(1, 'B.Tech. in Chemical Engineering'),
-(1, 'B.Tech. in Civil Engineering'),
-(1, 'B.Tech. in Bio Technology'),
-(1, 'B.Tech. in Materials Engineering'),
-(1, 'B.Tech. in Production and Industrial Engineering');
+
 
 -- Local guide categories used by routes like /api/local-guide/places/:category
 /*INSERT INTO local_guide_categories (category_name)

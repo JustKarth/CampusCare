@@ -3,12 +3,14 @@ USE campus_care;
 
 CREATE TABLE avatars (
 	avatar_id INT AUTO_INCREMENT PRIMARY KEY,
-    avatar_url VARCHAR(2048) NOT NULL
+    avatar_url VARCHAR(2048) NOT NULL,
+    UNIQUE(avatar_url)
 );
 
 CREATE TABLE states (
 	state_id INT AUTO_INCREMENT PRIMARY KEY,
-    state_name VARCHAR(50) NOT NULL
+    state_name VARCHAR(50) NOT NULL,
+    UNIQUE(state_name)
 );
 
 CREATE TABLE colleges (
@@ -17,7 +19,8 @@ CREATE TABLE colleges (
     college_name VARCHAR(255) NOT NULL,
     city VARCHAR(50) NOT NULL,
     state_id INT NOT NULL,
-    FOREIGN KEY (state_id) REFERENCES states(state_id) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY (state_id) REFERENCES states(state_id) ON UPDATE CASCADE ON DELETE RESTRICT,
+    UNIQUE(email_domain)
 );
 
 CREATE TABLE courses (
@@ -30,7 +33,8 @@ CREATE TABLE courses (
 
 CREATE TABLE local_guide_categories(
 	category_id INT AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(100) NOT NULL
+    category_name VARCHAR(100) NOT NULL,
+    UNIQUE(category_name)
 );
 
 CREATE TABLE user_profiles (
@@ -60,7 +64,8 @@ CREATE TABLE user_profiles (
 
 CREATE TABLE blog_images (
 	blog_image_id INT AUTO_INCREMENT PRIMARY KEY,
-    blog_image_url VARCHAR(2048) NOT NULL
+    blog_image_url VARCHAR(2048) NOT NULL,
+    UNIQUE(blog_image_url)
 );
 
 CREATE TABLE blog (
@@ -109,7 +114,7 @@ CREATE TABLE academic_resources (
     resource_description TEXT,
     resource_link VARCHAR(2048) NOT NULL,
     FOREIGN KEY (college_id) REFERENCES colleges(college_id),
-    UNIQUE (resource_link)
+    UNIQUE (college_id, resource_link)
 );
 
 CREATE TABLE places (
@@ -123,7 +128,8 @@ CREATE TABLE places (
     website VARCHAR(2048),
     phone VARCHAR(20),
     FOREIGN KEY (category_id) REFERENCES local_guide_categories(category_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (college_id) REFERENCES colleges(college_id)
+    FOREIGN KEY (college_id) REFERENCES colleges(college_id),
+    UNIQUE (place_name, college_id)
 );
 
 CREATE TABLE place_rating(
@@ -133,4 +139,23 @@ CREATE TABLE place_rating(
     FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES user_profiles(user_id) ON DELETE CASCADE,
     PRIMARY KEY(place_id, user_id)
+);
+
+CREATE TABLE fares(
+    fare_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    start_id INT NOT NULL,
+    destination_id INT NOT NULL,
+    fare INT NOT NULL,
+    UNIQUE(user_id, start_id, destination_id),
+    FOREIGN KEY (user_id) REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (start_id) REFERENCES places(place_id) ON DELETE CASCADE,
+    fOREIGN KEY (destination_id) REFERENCES places(place_id) ON DELETE CASCADE
+);
+
+CREATE TABLE dashboard_images (
+    image_id INT AUTO_INCREMENT PRIMARY KEY,
+    college_id INT NOT NULL,
+    image_url VARCHAR(2048) NOT NULL,
+    UNIQUE(image_url)
 );
