@@ -1,13 +1,9 @@
 import { escapeHtml } from '../../utils/escapeHtml';
-<<<<<<< HEAD
 import { useAuth } from '../../context/AuthContext';
-=======
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
 
 // Comment Card component
 // Replaces: comments.js HTML template for comment display
 
-<<<<<<< HEAD
 export function CommentCard({ comment, onDelete, isDeleting = false }) {
   const { user } = useAuth();
   // Use camelCase: comment.userId (normalized from user_id)
@@ -72,17 +68,6 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
           </button>
         )}
       </div>
-=======
-export function CommentCard({ comment }) {
-  return (
-    <div className="bg-gray-50 rounded-lg p-4 mb-3">
-      <p className="text-gray-800">{escapeHtml(comment.comment_content)}</p>
-      {comment.created_at && (
-        <p className="text-xs text-gray-500 mt-2">
-          {new Date(comment.created_at).toLocaleString()}
-        </p>
-      )}
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
     </div>
   );
 }

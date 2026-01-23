@@ -24,7 +24,7 @@ CREATE TABLE courses (
 	course_id INT AUTO_INCREMENT PRIMARY KEY,
     college_id INT NOT NULL,
     course_name VARCHAR(128) NOT NULL,
-    UNIQUE KEY(course_id, college_id),
+    UNIQUE KEY(course_name, college_id),
     FOREIGN KEY (college_id) REFERENCES colleges(college_id)
 );
 
@@ -108,7 +108,8 @@ CREATE TABLE academic_resources (
     resource_title VARCHAR(255) NOT NULL,
     resource_description TEXT,
     resource_link VARCHAR(2048) NOT NULL,
-    FOREIGN KEY (college_id) REFERENCES colleges(college_id)
+    FOREIGN KEY (college_id) REFERENCES colleges(college_id),
+    UNIQUE (resource_link)
 );
 
 CREATE TABLE places (

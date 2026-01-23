@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiRequest } from '../services/apiClient';
-<<<<<<< HEAD
 import { normalizeComments, normalizeComment } from '../utils/normalize';
-=======
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
 
 // Comments data fetching hook
 // Replaces: comments.js data fetching functions
@@ -12,10 +9,7 @@ export function useComments(blogId) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
   const [deletingComments, setDeletingComments] = useState(new Set()); // Track which comments are being deleted
-=======
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
 
   const fetchComments = async () => {
     if (!blogId) return;
@@ -23,12 +17,8 @@ export function useComments(blogId) {
     setError(null);
     try {
       const res = await apiRequest(`/blogs/${blogId}/comments`, 'GET');
-<<<<<<< HEAD
       // Normalize comment data from snake_case to camelCase
       setComments(normalizeComments(res.comments || []));
-=======
-      setComments(res.comments || []);
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
     } catch (err) {
       setError(err.message || 'Failed to load comments');
     } finally {
@@ -57,7 +47,6 @@ export function useComments(blogId) {
     }
   };
 
-<<<<<<< HEAD
   const deleteComment = async (commentId) => {
     if (!commentId) return { success: false, error: 'Comment ID required' };
     
@@ -84,18 +73,13 @@ export function useComments(blogId) {
     }
   };
 
-=======
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   return {
     comments,
     loading,
     error,
     createComment,
-<<<<<<< HEAD
     deleteComment,
     deletingComments,
-=======
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
     refetch: fetchComments,
   };
 }

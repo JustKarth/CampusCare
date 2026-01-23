@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { apiRequest } from '../services/apiClient';
-<<<<<<< HEAD
 import { getToken } from '../services/authStorage';
 import { normalizeBlog, normalizeBlogs } from '../utils/normalize';
-=======
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
 
 // Blog data fetching hook
 // Replaces: blogs.js data fetching functions
@@ -13,7 +10,6 @@ export function useBlogs() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
   const [likedBlogs, setLikedBlogs] = useState(new Set()); // Track which blogs are liked
   const [likingBlogs, setLikingBlogs] = useState(new Set()); // Track which blogs are currently being liked/unliked
   const [pagination, setPagination] = useState({
@@ -65,15 +61,6 @@ export function useBlogs() {
       } else {
         setLikedBlogs(new Set());
       }
-=======
-
-  const fetchBlogs = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await apiRequest('/blogs', 'GET');
-      setBlogs(res.blogs || []);
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
     } catch (err) {
       setError(err.message || 'Failed to load blogs');
     } finally {
@@ -82,12 +69,8 @@ export function useBlogs() {
   };
 
   useEffect(() => {
-<<<<<<< HEAD
     fetchBlogs(pagination.page, pagination.limit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-=======
-    fetchBlogs();
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   }, []);
 
   const createBlog = async (blog_title, blog_content) => {
@@ -95,11 +78,7 @@ export function useBlogs() {
     setError(null);
     try {
       await apiRequest('/blogs', 'POST', { blog_title, blog_content }, true);
-<<<<<<< HEAD
       await fetchBlogs(pagination.page, pagination.limit); // Refresh list with current page
-=======
-      await fetchBlogs(); // Refresh list
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
       return { success: true };
     } catch (err) {
       const errorMessage = err.message || 'Failed to create blog';
@@ -110,7 +89,6 @@ export function useBlogs() {
     }
   };
 
-<<<<<<< HEAD
   const toggleLike = async (blogId) => {
     const isLiked = likedBlogs.has(blogId);
     
@@ -164,15 +142,6 @@ export function useBlogs() {
   const goToPage = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {
       fetchBlogs(page, pagination.limit);
-=======
-  const likeBlog = async (blogId) => {
-    try {
-      await apiRequest(`/blogs/${blogId}/like`, 'POST', null, true);
-      await fetchBlogs(); // Refresh to update like count
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message || 'Failed to like blog' };
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
     }
   };
 
@@ -181,17 +150,12 @@ export function useBlogs() {
     loading,
     error,
     createBlog,
-<<<<<<< HEAD
     likeBlog: toggleLike,
     likedBlogs,
     likingBlogs,
     pagination,
     goToPage,
     refetch: () => fetchBlogs(pagination.page, pagination.limit),
-=======
-    likeBlog,
-    refetch: fetchBlogs,
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   };
 }
 
@@ -199,11 +163,8 @@ export function useBlog(blogId) {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
   const [hasLiked, setHasLiked] = useState(false);
   const [loadingLikeStatus, setLoadingLikeStatus] = useState(false);
-=======
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
 
   useEffect(() => {
     if (!blogId) return;
@@ -212,7 +173,6 @@ export function useBlog(blogId) {
       setLoading(true);
       setError(null);
       try {
-<<<<<<< HEAD
         // Pass token for optional auth to get personalized data
         const token = getToken();
         const res = await apiRequest(`/blogs/${blogId}`, 'GET', null, token ? true : null);
@@ -230,10 +190,6 @@ export function useBlog(blogId) {
         } else {
           setHasLiked(false);
         }
-=======
-        const res = await apiRequest(`/blogs/${blogId}`, 'GET');
-        setBlog(res.blog);
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
       } catch (err) {
         setError(err.message || 'Failed to load blog');
       } finally {
@@ -244,7 +200,6 @@ export function useBlog(blogId) {
     fetchBlog();
   }, [blogId]);
 
-<<<<<<< HEAD
   const toggleLike = async () => {
     if (!blogId) return;
     
@@ -283,18 +238,6 @@ export function useBlog(blogId) {
       return { success: false, error: err.message || 'Failed to toggle like' };
     } finally {
       setLoadingLikeStatus(false);
-=======
-  const likeBlog = async () => {
-    if (!blogId) return;
-    try {
-      await apiRequest(`/blogs/${blogId}/like`, 'POST', null, true);
-      // Refresh blog to update like count
-      const res = await apiRequest(`/blogs/${blogId}`, 'GET');
-      setBlog(res.blog);
-      return { success: true };
-    } catch (err) {
-      return { success: false, error: err.message || 'Failed to like blog' };
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
     }
   };
 
@@ -302,12 +245,8 @@ export function useBlog(blogId) {
     blog,
     loading,
     error,
-<<<<<<< HEAD
     likeBlog: toggleLike,
     hasLiked,
     loadingLikeStatus,
-=======
-    likeBlog,
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   };
 }
