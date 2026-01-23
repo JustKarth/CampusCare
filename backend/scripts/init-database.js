@@ -56,12 +56,31 @@ async function initializeDatabase() {
       console.log('✅ Master data inserted\n');
     }
 
+    // ---------- SEED DATA ----------
+    const seedDataPath = path.join(__dirname, '..', 'db', 'seed_data.sql');
+
+    if (fs.existsSync(seedDataPath)) {
+      const seedDataSQL = fs.readFileSync(seedDataPath, 'utf8');
+      console.log('🌱 Executing seed_data.sql...');
+      await connection.query(seedDataSQL); // ✅ SINGLE CALL
+      console.log('✅ Seed data inserted\n');
+    }
+
     // ---------- VERIFICATION ----------
     const [tables] = await connection.query('SHOW TABLES');
     console.log(`✅ Found ${tables.length} tables`);
 
     const [[states]] = await connection.query('SELECT COUNT(*) count FROM states');
     console.log(`   States: ${states.count}`);
+
+    const [[courses]] = await connection.query('SELECT COUNT(*) count FROM courses');
+    console.log(`   Courses: ${courses.count}`);
+
+    const [[resources]] = await connection.query('SELECT COUNT(*) count FROM academic_resources');
+    console.log(`   Academic Resources: ${resources.count}`);
+
+    const [[avatars]] = await connection.query('SELECT COUNT(*) count FROM avatars');
+    console.log(`   Avatars: ${avatars.count}`);
 
     console.log('\n🎉 Database initialization completed successfully!');
   } catch (error) {

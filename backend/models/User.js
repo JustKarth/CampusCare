@@ -32,7 +32,7 @@ class User {
       course_id,
       graduation_year,
       date_of_birth,
-      avatar_id = 1,
+      avatar_id = null,
       native_state_id = null,
       native_city = null
     } = userData;
@@ -55,7 +55,7 @@ class User {
         course_id,
         graduation_year,
         date_of_birth,
-        avatar_id ?? 1,
+        avatar_id ?? null,
         native_state_id ?? null,
         native_city ?? null
       ]
