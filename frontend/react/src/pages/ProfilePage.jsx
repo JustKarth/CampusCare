@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { TopNav } from '../components/layout/TopNav';
 import { Footer } from '../components/layout/Footer';
+import { AvatarSelector } from '../components/profile/AvatarSelector';
 import { useAuthOperations } from '../hooks/useAuth';
 import { useAuth as useAuthContext } from '../context/AuthContext';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
@@ -49,34 +50,43 @@ export function ProfilePage() {
           ) : error ? (
             <ErrorMessage message={error} />
           ) : (
-            <div className="card space-y-4 fade-in">
-              <div className="space-y-3">
-                <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Name:</strong>{' '}
-                  <span className="text-gray-600">{fullName || 'N/A'}</span>
-                </p>
-                <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Email:</strong>{' '}
-                  <span className="text-gray-600">{user?.email || 'N/A'}</span>
-                </p>
-                <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">College:</strong>{' '}
-                  <span className="text-gray-600">{user?.collegeName || user?.collegeId || 'N/A'}</span>
-                </p>
-                <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Course:</strong>{' '}
-                  <span className="text-gray-600">{user?.courseName || user?.courseId || 'N/A'}</span>
-                </p>
-                <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Graduation Year:</strong>{' '}
-                  <span className="text-gray-600">{user?.graduationYear || 'N/A'}</span>
-                </p>
-                {user?.regNo && (
+            <div className="space-y-6 fade-in">
+              {/* Avatar Selection Section */}
+              <div className="card">
+                <AvatarSelector />
+              </div>
+              
+              {/* Profile Information Section */}
+              <div className="card space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Profile Information</h3>
+                <div className="space-y-3">
                   <p className="text-sm md:text-base">
-                    <strong className="text-gray-700">Registration Number:</strong>{' '}
-                    <span className="text-gray-600">{user.regNo}</span>
+                    <strong className="text-gray-700">Name:</strong>{' '}
+                    <span className="text-gray-600">{fullName || 'N/A'}</span>
                   </p>
-                )}
+                  <p className="text-sm md:text-base">
+                    <strong className="text-gray-700">Email:</strong>{' '}
+                    <span className="text-gray-600">{user?.email || 'N/A'}</span>
+                  </p>
+                  <p className="text-sm md:text-base">
+                    <strong className="text-gray-700">College:</strong>{' '}
+                    <span className="text-gray-600">{user?.collegeName || user?.collegeId || 'N/A'}</span>
+                  </p>
+                  <p className="text-sm md:text-base">
+                    <strong className="text-gray-700">Course:</strong>{' '}
+                    <span className="text-gray-600">{user?.courseName || user?.courseId || 'N/A'}</span>
+                  </p>
+                  <p className="text-sm md:text-base">
+                    <strong className="text-gray-700">Graduation Year:</strong>{' '}
+                    <span className="text-gray-600">{user?.graduationYear || 'N/A'}</span>
+                  </p>
+                  {user?.regNo && (
+                    <p className="text-sm md:text-base">
+                      <strong className="text-gray-700">Registration Number:</strong>{' '}
+                      <span className="text-gray-600">{user.regNo}</span>
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           )}
