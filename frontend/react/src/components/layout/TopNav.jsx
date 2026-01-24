@@ -21,7 +21,7 @@ export function TopNav() {
     { path: '/dashboard', label: 'Home', tab: 'overview' },
     { path: '/blogs', label: 'Blogs', tab: 'profile' },
     { path: '/resources', label: 'Resources', tab: 'resources' },
-    { path: '/local-guide', label: 'Cultural Life', tab: 'complaints' },
+    { path: '/local-guide', label: 'Local Guide', tab: 'complaints' },
   ];
 
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/');
