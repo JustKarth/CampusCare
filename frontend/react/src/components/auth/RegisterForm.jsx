@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthOperations } from '../../hooks/useAuth';
+import { useDropdownData } from '../../hooks/useDropdownData';
 import { ErrorMessage } from '../common/ErrorMessage';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { validateRegistrationForm } from '../../utils/validation';
@@ -25,6 +26,7 @@ export function RegisterForm() {
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const { register, loading, error } = useAuthOperations();
+  const { courses, states, loading: dropdownLoading, error: dropdownError } = useDropdownData();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -73,7 +75,14 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-4 fade-up">
-      <ErrorMessage message={error} />
+      <ErrorMessage message={error || dropdownError} />
+
+      {dropdownLoading && (
+        <div className="flex items-center justify-center py-4">
+          <LoadingSpinner size="sm" className="text-blue-600" />
+          <span className="ml-2 text-gray-600">Loading form options...</span>
+        </div>
+      )}
 
       <div>
         <input
@@ -158,15 +167,23 @@ export function RegisterForm() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="number"
-          name="course_id"
-          value={formData.course_id}
-          onChange={handleChange}
-          placeholder="Course ID (e.g. 1)"
-          required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
+        <div>
+          <select
+            name="course_id"
+            value={formData.course_id}
+            onChange={handleChange}
+            required
+            disabled={loading || dropdownLoading}
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+          >
+            <option value="">Select Course</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <input
           type="number"
           name="graduation_year"
@@ -175,6 +192,7 @@ export function RegisterForm() {
           placeholder="Graduation Year"
           required
           className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          disabled={loading}
         />
       </div>
 
@@ -189,14 +207,22 @@ export function RegisterForm() {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="number"
-          name="native_state_id"
-          value={formData.native_state_id}
-          onChange={handleChange}
-          placeholder="Native State ID (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
+        <div>
+          <select
+            name="native_state_id"
+            value={formData.native_state_id}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+            disabled={loading || dropdownLoading}
+          >
+            <option value="">Select State (optional)</option>
+            {states.map((state) => (
+              <option key={state.id} value={state.id}>
+                {state.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <input
           type="text"
           name="native_city"
@@ -204,6 +230,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="Native City (optional)"
           className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          disabled={loading}
         />
       </div>
 

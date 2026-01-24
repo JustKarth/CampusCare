@@ -15,6 +15,7 @@ import { InteractiveMap } from '../components/localGuide/InteractiveMap';
 import { PlaceSearch } from '../components/localGuide/PlaceSearch';
 import { NearbyPlaces } from '../components/localGuide/NearbyPlaces';
 import { RouteCalculator } from '../components/localGuide/RouteCalculator';
+import { Link } from 'react-router-dom';
 
 // Local Guide Page
 // Replaces: local-guide.html + localGuide.js
@@ -44,7 +45,8 @@ export function LocalGuidePage() {
   const tabs = [
     { id: 'nearby', label: 'Nearby', icon: '🗺️' },
     { id: 'search', label: 'Search', icon: '🔍' },
-    { id: 'routes', label: 'Routes', icon: '🛣️' }
+    { id: 'routes', label: 'Routes', icon: '🛣️' },
+    { id: 'fares', label: 'Fare Analysis', icon: '💰' }
   ];
 
   const handlePlaceSelect = (place) => {
@@ -153,6 +155,53 @@ export function LocalGuidePage() {
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-4">Route Calculator</h3>
               <RouteCalculator onRouteCalculated={handleRouteCalculated} />
+            </div>
+          )}
+
+          {activeTab === 'fares' && (
+            <div className="space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <div className="flex items-center space-x-4">
+                  <span className="text-3xl">💰</span>
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-900">Fare Analysis</h3>
+                    <p className="text-blue-700">Submit and analyze transportation fares to different places</p>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <Link
+                    to="/fare-analysis"
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Open Fare Analysis
+                    <span className="ml-2">→</span>
+                  </Link>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="text-center">
+                    <span className="text-2xl">📍</span>
+                    <h4 className="font-medium text-gray-900 mt-2">Search Places</h4>
+                    <p className="text-sm text-gray-600 mt-1">Find any destination</p>
+                  </div>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="text-center">
+                    <span className="text-2xl">💵</span>
+                    <h4 className="font-medium text-gray-900 mt-2">Submit Fares</h4>
+                    <p className="text-sm text-gray-600 mt-1">Share transportation costs</p>
+                  </div>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="text-center">
+                    <span className="text-2xl">📊</span>
+                    <h4 className="font-medium text-gray-900 mt-2">View Analysis</h4>
+                    <p className="text-sm text-gray-600 mt-1">See fare distributions</p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>

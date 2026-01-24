@@ -69,9 +69,9 @@ export function LoginForm() {
         <p className="text-gray-600 text-sm mb-3">Not registered yet?</p>
         <Link 
           to="/register" 
-          className="inline-block w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+          className="inline-block w-full py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02] text-lg font-bold border-2 border-green-400"
         >
-          Create New Account
+          🚀 Create New Account
         </Link>
       </div>
     </form>

@@ -27,7 +27,7 @@ export function useAuthOperations() {
       setContextToken(res.token);
       setContextUser(res.user);
 
-      navigate('/dashboard');
+      navigate('/splash');
       return { success: true };
     } catch (err) {
       const errorMessage = formatApiError(err);

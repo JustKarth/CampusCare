@@ -2,18 +2,27 @@ import axios from 'axios';
 
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org';
 
+// Custom user agent for Nominatim compliance
+const USER_AGENT = 'CampusCare/1.0 (educational-purpose fare calculation app)';
+
 export class SearchService {
   // Search for places with autocomplete and proximity sorting
-  static async searchPlaces(query, userLocation = null, limit = 10) {
+  static async searchPlaces(query, userLocation = null, limit = 10, options = {}) {
     try {
       const response = await axios.get(`${NOMINATIM_BASE_URL}/search`, {
+        ...options,
+        headers: {
+          'User-Agent': USER_AGENT,
+          ...options.headers
+        },
         params: {
           format: 'json',
           q: query,
           limit: limit * 2, // Get more results to filter and sort
           addressdetails: 1,
           extratags: 1,
-          countrycodes: 'in' // Prioritize India
+          countrycodes: 'in', // Prioritize India
+          ...options.params
         }
       });
 
