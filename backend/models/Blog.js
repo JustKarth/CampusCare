@@ -4,6 +4,11 @@ class Blog {
   // Get all blogs with pagination
   static async findAll(collegeId = null, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
+    
+    // Ensure parameters are integers
+    const limitInt = parseInt(limit, 10);
+    const offsetInt = parseInt(offset, 10);
+    
     let query = `
       SELECT 
         b.blog_id, b.blog_title, b.blog_content, b.created_at,
@@ -22,17 +27,15 @@ class Blog {
 
     if (collegeId) {
       query += ' WHERE b.college_id = ?';
-      params.push(collegeId);
+      params.push(parseInt(collegeId, 10));
     }
 
     query += `
       GROUP BY b.blog_id, b.blog_title, b.blog_content, b.created_at,
                u.user_id, u.first_name, u.last_name, u.avatar_id, a.avatar_url
       ORDER BY b.created_at DESC
-      LIMIT ? OFFSET ?
+      LIMIT ${limitInt} OFFSET ${offsetInt}
     `;
-
-    params.push(limit, offset);
 
     const [rows] = await pool.execute(query, params);
     return rows;

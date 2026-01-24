@@ -222,12 +222,15 @@ export function RegisterForm() {
         )}
       </button>
 
-      <p className="text-center text-white text-sm">
-        Already registered?{' '}
-        <Link to="/login" className="underline font-semibold hover:text-gray-200">
-          Login here
+      <div className="text-center pt-4 border-t border-gray-200">
+        <p className="text-gray-600 text-sm mb-3">Already have an account?</p>
+        <Link 
+          to="/login" 
+          className="inline-block w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+        >
+          Sign In to Your Account
         </Link>
-      </p>
+      </div>
     </form>
   );
 }
