@@ -4,6 +4,11 @@ class Resource {
   // Get all resources for a college
   static async findByCollegeId(collegeId, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
+    
+    // Ensure parameters are integers
+    const collegeIdInt = parseInt(collegeId, 10);
+    const limitInt = parseInt(limit, 10);
+    const offsetInt = parseInt(offset, 10);
 
     const [rows] = await pool.execute(
       `SELECT 
@@ -13,8 +18,8 @@ class Resource {
       INNER JOIN colleges c ON ar.college_id = c.college_id
       WHERE ar.college_id = ?
       ORDER BY ar.resource_id DESC
-      LIMIT ? OFFSET ?`,
-      [collegeId, limit, offset]
+      LIMIT ${limitInt} OFFSET ${offsetInt}`,
+      [collegeIdInt]
     );
     return rows;
   }
@@ -22,6 +27,10 @@ class Resource {
   // Get all resources (for admin/moderator)
   static async findAll(page = 1, limit = 10) {
     const offset = (page - 1) * limit;
+    
+    // Ensure parameters are integers
+    const limitInt = parseInt(limit, 10);
+    const offsetInt = parseInt(offset, 10);
 
     const [rows] = await pool.execute(
       `SELECT 
@@ -30,8 +39,7 @@ class Resource {
       FROM academic_resources ar
       INNER JOIN colleges c ON ar.college_id = c.college_id
       ORDER BY ar.resource_id DESC
-      LIMIT ? OFFSET ?`,
-      [limit, offset]
+      LIMIT ${limitInt} OFFSET ${offsetInt}`
     );
     return rows;
   }
