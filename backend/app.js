@@ -15,6 +15,7 @@ const commentRoutes = require('./routes/commentRoutes');
 const reactionRoutes = require('./routes/reactionRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const localGuideRoutes = require('./routes/localGuideRoutes');
+const referenceRoutes = require('./routes/referenceRoutes');
 
 const app = express();
 
@@ -65,6 +66,7 @@ app.use('/api/blogs', commentRoutes);
 app.use('/api/blogs', reactionRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/local-guide', localGuideRoutes);
+app.use('/api', referenceRoutes);
 
 // 404 handler (must be before error handler)
 app.use(notFound);
