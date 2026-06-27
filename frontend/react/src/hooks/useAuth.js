@@ -27,7 +27,7 @@ export function useAuthOperations() {
       setContextToken(res.token);
       setContextUser(res.user);
 
-      navigate('/dashboard');
+      navigate('/splash');
       return { success: true };
     } catch (err) {
       const errorMessage = formatApiError(err);
@@ -42,8 +42,18 @@ export function useAuthOperations() {
     setLoading(true);
     setError(null);
     try {
-      await apiRequest('/auth/register', 'POST', payload);
-      navigate('/login');
+      const res = await apiRequest('/auth/register', 'POST', payload);
+
+      if (res.token) {
+        setToken(res.token);
+        setContextToken(res.token);
+      }
+      if (res.user) {
+        setUser(res.user);
+        setContextUser(res.user);
+      }
+
+      navigate('/splash');
       return { success: true };
     } catch (err) {
       const errorMessage = formatApiError(err);

@@ -196,7 +196,7 @@ resource_title		VARCHAR(255)	NOT NULL
 
 resource_description	TEXT
 
-resource_link		VARCHAR(2048)	NOT NULL
+resource_link		VARCHAR(2048)	NOT NULL UNIQUE
 
 
 

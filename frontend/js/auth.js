@@ -55,12 +55,57 @@ document.getElementById("registerForm")?.addEventListener("submit", async e => {
     native_city: nativeCityEl?.value?.trim() || undefined
   };
 
+<<<<<<< HEAD
   try {
     await apiRequest("/auth/register", "POST", payload);
     alert("Registration successful! Please login.");
     window.location.href = "index.html";
   } catch (err) {
     alert(formatApiError(err));
+=======
+  // Validate required fields
+  if (!payload.email || !payload.password || !payload.reg_no || !payload.first_name || 
+      !payload.last_name || !payload.course_id || !payload.graduation_year || !payload.date_of_birth) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn?.textContent;
+  
+  try {
+    // Disable button and show loading state
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Registering...";
+    }
+
+    const res = await apiRequest("/auth/register", "POST", payload);
+    
+    // Store token and user if returned (though registration might not return token)
+    if (res.token) {
+      setToken(res.token);
+    }
+    if (res.user) {
+      localStorage.setItem("user", JSON.stringify(res.user));
+    }
+    
+    alert("Registration successful! Redirecting to login...");
+    window.location.href = "login.html";
+  } catch (err) {
+    // Handle network errors
+    if (err.message === "Failed to fetch" || err.message.includes("NetworkError")) {
+      alert("Network error: Could not connect to server. Please check if the backend is running.");
+    } else {
+      alert(formatApiError(err));
+    }
+  } finally {
+    // Re-enable button
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText || "Register";
+    }
+>>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   }
 });
 
@@ -71,6 +116,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async e => {
   const emailEl = document.getElementById("email");
   const passwordEl = document.getElementById("password");
 
+<<<<<<< HEAD
   try {
     const res = await apiRequest("/auth/login", "POST", {
       email: emailEl?.value?.trim(),
@@ -84,5 +130,56 @@ document.getElementById("loginForm")?.addEventListener("submit", async e => {
     window.location.href = "dashboard.html";
   } catch (err) {
     alert(formatApiError(err));
+=======
+  const email = emailEl?.value?.trim();
+  const password = passwordEl?.value;
+
+  if (!email || !password) {
+    alert("Please enter both email and password.");
+    return;
+  }
+
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn?.textContent;
+
+  try {
+    // Disable button and show loading state
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Logging in...";
+    }
+
+    const res = await apiRequest("/auth/login", "POST", {
+      email,
+      password
+    });
+
+    // Store token and user data
+    if (!res.token) {
+      throw new Error("No token received from server.");
+    }
+
+    setToken(res.token);
+    localStorage.setItem("user", JSON.stringify(res.user));
+    if (res.user?.collegeName) {
+      localStorage.setItem("collegeName", res.user.collegeName);
+    }
+
+    // Redirect to dashboard
+    window.location.href = "dashboard.html";
+  } catch (err) {
+    // Handle network errors
+    if (err.message === "Failed to fetch" || err.message.includes("NetworkError")) {
+      alert("Network error: Could not connect to server. Please check if the backend is running on http://localhost:5000");
+    } else {
+      alert(formatApiError(err));
+    }
+  } finally {
+    // Re-enable button
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText || "Login";
+    }
+>>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   }
 });
