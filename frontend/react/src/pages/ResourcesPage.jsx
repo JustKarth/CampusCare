@@ -37,7 +37,7 @@ export function ResourcesPage() {
       <TopNav />
       <main className="flex-1 p-6 md:p-10 fade-in">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-xl md:text-2xl mb-6">Academic Resources</h2>
+          <h2 className="text-xl md:text-2xl mb-6 text-text-primary font-semibold">Academic Resources</h2>
 
           {/* Search */}
           <div className="mb-6">
@@ -46,7 +46,7 @@ export function ResourcesPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search resources..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              className="input-field"
             />
           </div>
 

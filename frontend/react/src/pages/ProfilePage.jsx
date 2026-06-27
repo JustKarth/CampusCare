@@ -40,11 +40,11 @@ export function ProfilePage() {
       <TopNav />
       <main className="flex-1 p-6 md:p-10 fade-in">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-xl md:text-2xl mb-6">My Profile</h2>
+          <h2 className="text-xl md:text-2xl mb-6 text-text-primary font-semibold">My Profile</h2>
           
           {loading ? (
             <div className="card flex items-center justify-center min-h-[200px]">
-              <LoadingSpinner size="lg" className="text-blue-600" />
+              <LoadingSpinner size="lg" className="text-primary" />
             </div>
           ) : error ? (
             <ErrorMessage message={error} />
@@ -52,29 +52,29 @@ export function ProfilePage() {
             <div className="card space-y-4 fade-in">
               <div className="space-y-3">
                 <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Name:</strong>{' '}
-                  <span className="text-gray-600">{fullName || 'N/A'}</span>
+                  <strong className="text-text-primary">Name:</strong>{' '}
+                  <span className="text-text-secondary">{fullName || 'N/A'}</span>
                 </p>
                 <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Email:</strong>{' '}
-                  <span className="text-gray-600">{user?.email || 'N/A'}</span>
+                  <strong className="text-text-primary">Email:</strong>{' '}
+                  <span className="text-text-secondary">{user?.email || 'N/A'}</span>
                 </p>
                 <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">College:</strong>{' '}
-                  <span className="text-gray-600">{user?.collegeName || user?.collegeId || 'N/A'}</span>
+                  <strong className="text-text-primary">College:</strong>{' '}
+                  <span className="text-text-secondary">{user?.collegeName || user?.collegeId || 'N/A'}</span>
                 </p>
                 <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Course:</strong>{' '}
-                  <span className="text-gray-600">{user?.courseName || user?.courseId || 'N/A'}</span>
+                  <strong className="text-text-primary">Course:</strong>{' '}
+                  <span className="text-text-secondary">{user?.courseName || user?.courseId || 'N/A'}</span>
                 </p>
                 <p className="text-sm md:text-base">
-                  <strong className="text-gray-700">Graduation Year:</strong>{' '}
-                  <span className="text-gray-600">{user?.graduationYear || 'N/A'}</span>
+                  <strong className="text-text-primary">Graduation Year:</strong>{' '}
+                  <span className="text-text-secondary">{user?.graduationYear || 'N/A'}</span>
                 </p>
                 {user?.regNo && (
                   <p className="text-sm md:text-base">
-                    <strong className="text-gray-700">Registration Number:</strong>{' '}
-                    <span className="text-gray-600">{user.regNo}</span>
+                    <strong className="text-text-primary">Registration Number:</strong>{' '}
+                    <span className="text-text-secondary">{user.regNo}</span>
                   </p>
                 )}
               </div>

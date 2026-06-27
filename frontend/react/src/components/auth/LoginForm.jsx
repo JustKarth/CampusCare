@@ -32,7 +32,7 @@ export function LoginForm() {
         aria-label="Email address"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
       />
 
       <input
@@ -46,14 +46,14 @@ export function LoginForm() {
         aria-label="Password"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
       />
 
       <button
         type="submit"
         disabled={loading}
         aria-label={loading ? 'Logging in...' : 'Login'}
-        className="w-full py-3 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="btn-primary"
       >
         {loading ? (
           <>
@@ -65,9 +65,9 @@ export function LoginForm() {
         )}
       </button>
 
-      <p className="text-center text-white text-sm">
+      <p className="text-center text-text-secondary text-sm">
         Not registered?{' '}
-        <Link to="/register" className="underline font-semibold hover:text-gray-200 transition-colors">
+        <Link to="/register" className="text-primary font-semibold hover:text-primary-light transition-colors">
           Register here
         </Link>
       </p>

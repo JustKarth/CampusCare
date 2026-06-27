@@ -18,7 +18,7 @@ export function SuccessMessage({ message, onDismiss, className = '' }) {
   if (!message || !visible) return null;
 
   return (
-    <div className={`bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm ${className}`}>
+    <div className={`bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-3 rounded-card text-sm ${className}`}>
       {message}
     </div>
   );

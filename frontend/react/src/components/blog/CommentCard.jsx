@@ -1,26 +1,8 @@
 import { escapeHtml } from '../../utils/escapeHtml';
-<<<<<<< HEAD
-=======
 import { useAuth } from '../../context/AuthContext';
->>>>>>> main
 
-// Comment Card component
-// Replaces: comments.js HTML template for comment display
-
-<<<<<<< HEAD
-export function CommentCard({ comment }) {
-  return (
-    <div className="bg-gray-50 rounded-lg p-4 mb-3">
-      <p className="text-gray-800">{escapeHtml(comment.comment_content)}</p>
-      {comment.created_at && (
-        <p className="text-xs text-gray-500 mt-2">
-          {new Date(comment.created_at).toLocaleString()}
-        </p>
-      )}
-=======
 export function CommentCard({ comment, onDelete, isDeleting = false }) {
   const { user } = useAuth();
-  // Use camelCase: comment.userId (normalized from user_id)
   const isOwner = user && comment.userId && user.userId === comment.userId;
 
   const handleDelete = async () => {
@@ -38,7 +20,7 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
     : 'Anonymous';
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4 mb-3 hover:bg-gray-100 transition-colors duration-200">
+    <div className="bg-card/50 rounded-card p-4 mb-3 hover:bg-card/70 transition-colors duration-300 border border-white/5">
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1">
           <div className="flex items-start gap-2 mb-2">
@@ -52,16 +34,16 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
             )}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-semibold text-gray-700">{authorName}</span>
+                <span className="text-sm font-semibold text-text-primary">{authorName}</span>
                 {isOwner && (
-                  <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">You</span>
+                  <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">You</span>
                 )}
               </div>
-              <p className="text-gray-800 text-sm leading-relaxed">{escapeHtml(comment.commentContent)}</p>
+              <p className="text-text-secondary text-sm leading-relaxed">{escapeHtml(comment.commentContent)}</p>
             </div>
           </div>
           {comment.createdAt && (
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-text-secondary mt-2">
               {new Date(comment.createdAt).toLocaleString()}
             </p>
           )}
@@ -70,7 +52,7 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
           <button
             onClick={handleDelete}
             disabled={isDeleting}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 text-sm font-semibold transition-all duration-200 px-2 py-1 rounded transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-shrink-0"
+            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-sm font-semibold transition-all duration-300 px-2 py-1 rounded-card transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex-shrink-0"
             title="Delete comment"
             aria-label="Delete comment"
           >
@@ -82,7 +64,6 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
           </button>
         )}
       </div>
->>>>>>> main
     </div>
   );
 }

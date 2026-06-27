@@ -84,14 +84,14 @@ export function RegisterForm() {
           placeholder="College Email"
           required
           disabled={loading}
-          className={`w-full px-4 py-3 rounded-lg border transition-all disabled:opacity-50 ${
+        className={`input-field ${
             getFieldError('email')
-              ? 'border-red-300 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-pink-500'
-          } focus:outline-none focus:ring-2 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)]`}
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+              : ''
+          }`}
         />
         {getFieldError('email') && (
-          <p className="text-red-600 text-sm mt-1">{getFieldError('email')}</p>
+          <p className="text-red-400 text-sm mt-1">{getFieldError('email')}</p>
         )}
       </div>
 
@@ -102,7 +102,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Password"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -113,7 +113,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Confirm Password"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -124,7 +124,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Registration Number"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -136,7 +136,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="First Name"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="text"
@@ -144,7 +144,7 @@ export function RegisterForm() {
           value={formData.middle_name}
           onChange={handleChange}
           placeholder="Middle Name (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="text"
@@ -153,7 +153,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="Last Name"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
       </div>
 
@@ -165,7 +165,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="Course ID (e.g. 1)"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="number"
@@ -174,7 +174,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="Graduation Year"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
       </div>
 
@@ -184,7 +184,7 @@ export function RegisterForm() {
         value={formData.date_of_birth}
         onChange={handleChange}
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -195,7 +195,7 @@ export function RegisterForm() {
           value={formData.native_state_id}
           onChange={handleChange}
           placeholder="Native State ID (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="text"
@@ -203,14 +203,14 @@ export function RegisterForm() {
           value={formData.native_city}
           onChange={handleChange}
           placeholder="Native City (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="btn-primary"
       >
         {loading ? (
           <>
@@ -222,9 +222,9 @@ export function RegisterForm() {
         )}
       </button>
 
-      <p className="text-center text-white text-sm">
+      <p className="text-center text-text-secondary text-sm">
         Already registered?{' '}
-        <Link to="/login" className="underline font-semibold hover:text-gray-200">
+        <Link to="/login" className="text-primary font-semibold hover:text-primary-light transition-colors">
           Login here
         </Link>
       </p>

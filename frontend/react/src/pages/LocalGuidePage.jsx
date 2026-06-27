@@ -33,7 +33,7 @@ export function LocalGuidePage() {
       <TopNav />
       <main className="flex-1 p-6 md:p-10 fade-in">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-xl md:text-2xl mb-6">Local Guide</h2>
+          <h2 className="text-xl md:text-2xl mb-6 text-text-primary font-semibold">Local Guide</h2>
 
           <CategoryFilter
             categories={categories}
