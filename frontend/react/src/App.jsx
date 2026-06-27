@@ -25,8 +25,8 @@ import './styles/globals.css';
 
 function LoadingFallback() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <LoadingSpinner size="lg" className="text-blue-600" />
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <LoadingSpinner size="lg" className="text-primary" />
     </div>
   );
 }

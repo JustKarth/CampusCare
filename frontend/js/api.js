@@ -25,8 +25,12 @@ function logout(redirectTo = "index.html") {
 function requireAuth(redirectTo = "index.html") {
   const token = getToken();
   if (!token) {
+<<<<<<< HEAD
+    logout(redirectTo);
+=======
     // Soft-auth mode: allow browsing without being logged in.
     // Pages can check for null and show limited/guest experience.
+>>>>>>> main
     return null;
   }
   return token;
@@ -44,7 +48,6 @@ async function apiRequest(endpoint, method = "GET", body = null, token = null) {
     headers["Authorization"] = `Bearer ${resolvedToken}`;
   }
 
-<<<<<<< HEAD
   const res = await fetch(`${getApiBaseUrl()}${endpoint}`, {
     method,
     headers,
@@ -56,33 +59,6 @@ async function apiRequest(endpoint, method = "GET", body = null, token = null) {
     data = await res.json();
   } catch {
     data = {};
-=======
-  let res;
-  try {
-    res = await fetch(`${getApiBaseUrl()}${endpoint}`, {
-      method,
-      headers,
-      body: body ? JSON.stringify(body) : null
-    });
-  } catch (fetchError) {
-    // Network error - server not reachable
-    const error = new Error("Failed to fetch");
-    error.status = 0;
-    error.data = { message: "Could not connect to server. Please ensure the backend is running." };
-    throw error;
-  }
-
-  let data;
-  try {
-    const text = await res.text();
-    data = text ? JSON.parse(text) : {};
-  } catch (parseError) {
-    // Response is not JSON
-    data = {
-      message: res.statusText || "Server returned an invalid response",
-      status: res.status
-    };
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
   }
 
   if (!res.ok) {

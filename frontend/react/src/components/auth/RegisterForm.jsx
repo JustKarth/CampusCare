@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthOperations } from '../../hooks/useAuth';
-import { useDropdownData } from '../../hooks/useDropdownData';
 import { ErrorMessage } from '../common/ErrorMessage';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { validateRegistrationForm } from '../../utils/validation';
@@ -26,7 +25,6 @@ export function RegisterForm() {
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const { register, loading, error } = useAuthOperations();
-  const { courses, states, loading: dropdownLoading, error: dropdownError } = useDropdownData();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,14 +73,7 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-4 fade-up">
-      <ErrorMessage message={error || dropdownError} />
-
-      {dropdownLoading && (
-        <div className="flex items-center justify-center py-4">
-          <LoadingSpinner size="sm" className="text-blue-600" />
-          <span className="ml-2 text-gray-600">Loading form options...</span>
-        </div>
-      )}
+      <ErrorMessage message={error} />
 
       <div>
         <input
@@ -93,14 +84,14 @@ export function RegisterForm() {
           placeholder="College Email"
           required
           disabled={loading}
-          className={`w-full px-4 py-3 rounded-lg border transition-all disabled:opacity-50 ${
+        className={`input-field ${
             getFieldError('email')
-              ? 'border-red-300 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-pink-500'
-          } focus:outline-none focus:ring-2 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)]`}
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+              : ''
+          }`}
         />
         {getFieldError('email') && (
-          <p className="text-red-600 text-sm mt-1">{getFieldError('email')}</p>
+          <p className="text-red-400 text-sm mt-1">{getFieldError('email')}</p>
         )}
       </div>
 
@@ -111,7 +102,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Password"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -122,7 +113,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Confirm Password"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -133,7 +124,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Registration Number"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -145,7 +136,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="First Name"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="text"
@@ -153,7 +144,7 @@ export function RegisterForm() {
           value={formData.middle_name}
           onChange={handleChange}
           placeholder="Middle Name (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="text"
@@ -162,28 +153,20 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="Last Name"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <select
-            name="course_id"
-            value={formData.course_id}
-            onChange={handleChange}
-            required
-            disabled={loading || dropdownLoading}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
-          >
-            <option value="">Select Course</option>
-            {courses.map((course) => (
-              <option key={course.id} value={course.id}>
-                {course.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <input
+          type="number"
+          name="course_id"
+          value={formData.course_id}
+          onChange={handleChange}
+          placeholder="Course ID (e.g. 1)"
+          required
+          className="input-field"
+        />
         <input
           type="number"
           name="graduation_year"
@@ -191,8 +174,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="Graduation Year"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-          disabled={loading}
+          className="input-field"
         />
       </div>
 
@@ -202,42 +184,33 @@ export function RegisterForm() {
         value={formData.date_of_birth}
         onChange={handleChange}
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <select
-            name="native_state_id"
-            value={formData.native_state_id}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
-            disabled={loading || dropdownLoading}
-          >
-            <option value="">Select State (optional)</option>
-            {states.map((state) => (
-              <option key={state.id} value={state.id}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <input
+          type="number"
+          name="native_state_id"
+          value={formData.native_state_id}
+          onChange={handleChange}
+          placeholder="Native State ID (optional)"
+          className="input-field"
+        />
         <input
           type="text"
           name="native_city"
           value={formData.native_city}
           onChange={handleChange}
           placeholder="Native City (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-          disabled={loading}
+          className="input-field"
         />
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="btn-primary"
       >
         {loading ? (
           <>
@@ -249,15 +222,12 @@ export function RegisterForm() {
         )}
       </button>
 
-      <div className="text-center pt-4 border-t border-gray-200">
-        <p className="text-gray-600 text-sm mb-3">Already have an account?</p>
-        <Link 
-          to="/login" 
-          className="inline-block w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-        >
-          Sign In to Your Account
+      <p className="text-center text-text-secondary text-sm">
+        Already registered?{' '}
+        <Link to="/login" className="text-primary font-semibold hover:text-primary-light transition-colors">
+          Login here
         </Link>
-      </div>
+      </p>
     </form>
   );
 }

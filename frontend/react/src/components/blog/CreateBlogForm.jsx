@@ -55,8 +55,8 @@ export function CreateBlogForm() {
   };
 
   return (
-    <div className="bg-[#f9f9fb] rounded-xl p-5 md:p-6 mb-6 shadow-md">
-      <h4 className="text-lg font-semibold mb-4">Create New Blog</h4>
+    <div className="card mb-6">
+      <h4 className="text-lg font-semibold mb-4 text-text-primary">Create New Blog</h4>
       <SuccessMessage message={success} onDismiss={() => setSuccess('')} className="mb-4" />
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -68,16 +68,16 @@ export function CreateBlogForm() {
             required
             disabled={loading}
             maxLength={128}
-            className={`w-full px-4 py-2 rounded-lg border transition-all disabled:opacity-50 ${
+            className={`input-field ${
               errors.title
-                ? 'border-red-300 focus:ring-red-500'
-                : 'border-gray-300 focus:ring-pink-500'
-            } focus:outline-none focus:ring-2 focus:border-transparent`}
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                : ''
+            }`}
           />
           {errors.title && (
-            <p className="text-red-600 text-sm mt-1">{errors.title}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.title}</p>
           )}
-          <p className="text-gray-500 text-xs mt-1">{title.length}/128 characters</p>
+          <p className="text-text-secondary text-xs mt-1">{title.length}/128 characters</p>
         </div>
         <div>
           <textarea
@@ -87,20 +87,20 @@ export function CreateBlogForm() {
             required
             rows={6}
             disabled={loading}
-            className={`w-full px-4 py-2 rounded-lg border transition-all disabled:opacity-50 ${
+            className={`input-field resize-y ${
               errors.content
-                ? 'border-red-300 focus:ring-red-500'
-                : 'border-gray-300 focus:ring-pink-500'
-            } focus:outline-none focus:ring-2 focus:border-transparent resize-y`}
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                : ''
+            }`}
           />
           {errors.content && (
-            <p className="text-red-600 text-sm mt-1">{errors.content}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.content}</p>
           )}
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+          className="btn-primary"
         >
           {loading ? (
             <>

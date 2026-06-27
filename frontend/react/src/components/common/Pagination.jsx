@@ -46,7 +46,7 @@ export function Pagination({ currentPage, totalPages, onPageChange, className = 
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        className="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+        className="px-3 py-2 rounded-card border border-white/10 text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-card/50 transition-colors"
       >
         ← Prev
       </button>
@@ -66,10 +66,10 @@ export function Pagination({ currentPage, totalPages, onPageChange, className = 
             onClick={() => onPageChange(page)}
             aria-label={`Page ${page}`}
             aria-current={currentPage === page ? 'page' : undefined}
-            className={`px-4 py-2 rounded-lg border transition-colors ${
+            className={`px-4 py-2 rounded-card border transition-colors ${
               currentPage === page
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'border-gray-300 hover:bg-gray-50'
+                ? 'bg-gradient-primary text-white border-transparent'
+                : 'border-white/10 text-text-primary hover:bg-card/50'
             }`}
           >
             {page}
@@ -81,7 +81,7 @@ export function Pagination({ currentPage, totalPages, onPageChange, className = 
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        className="px-3 py-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+        className="px-3 py-2 rounded-card border border-white/10 text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-card/50 transition-colors"
       >
         Next →
       </button>

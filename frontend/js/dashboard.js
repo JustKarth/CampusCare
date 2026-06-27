@@ -1,16 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
 <<<<<<< HEAD
+  // Require login for dashboard
+  const token = requireAuth("index.html");
+  if (!token) return;
+=======
   // Soft-auth: dashboard can be viewed as guest (limited info)
   // const token = requireAuth("index.html");
-=======
-  // Hard-auth: require a valid token to view the dashboard.
-  // If no token is present, redirect to the login page.
-  const token = getToken && typeof getToken === "function" ? getToken() : null;
-  if (!token) {
-    window.location.href = "login.html";
-    return;
-  }
->>>>>>> ff2694566445899c4cc2ebfdcb384bb5034979c7
+>>>>>>> main
 
   const currentPage = window.location.pathname
     .split("/")
@@ -70,12 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashCourseEl) dashCourseEl.textContent = courseName;
     const dashGradYearEl = document.getElementById("dashGradYear");
     if (dashGradYearEl) dashGradYearEl.textContent = user.graduationYear || "";
+<<<<<<< HEAD
+=======
   } else {
     // Guest view defaults
     const colNameEl = document.querySelector(".college-name");
     if (colNameEl) colNameEl.textContent = "< College Name >";
     const userNameEl = document.getElementById("userName");
     if (userNameEl) userNameEl.textContent = "Guest";
+>>>>>>> main
   }
 
   // Logout button

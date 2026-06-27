@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+/* ===== Reset & Base ===== */
+=======
 /* ===== Reset & Base (auth pages) ===== */
+>>>>>>> main
 * {
   margin: 0;
   padding: 0;
@@ -6,23 +10,44 @@
   font-family: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
 }
 
+<<<<<<< HEAD
+body {
+=======
 /* Only apply gradient layout on auth pages */
 body.auth-page {
+>>>>>>> main
   min-height: 100vh;
   background: linear-gradient(135deg, #7b2ff7, #ff4f9a);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+<<<<<<< HEAD
+}
+
+/* ===== Page Title ===== */
+h2 {
+=======
   padding: 1.5rem;
 }
 
 /* ===== Page Title ===== */
 .auth-page h2 {
+>>>>>>> main
   color: #ffffff;
   font-weight: 600;
   margin-bottom: 1.5rem;
   letter-spacing: 0.5px;
+<<<<<<< HEAD
+}
+
+/* ===== Form Card ===== */
+#registerForm {
+  background: #ffffff;
+  width: 100%;
+  max-width: px;
+  padding: 2rem 2.2rem;
+=======
   text-align: center;
 }
 
@@ -33,6 +58,7 @@ body.auth-page {
   width: 100%;
   max-width: 420px;
   padding: 2rem 2.2rem 1.5rem;
+>>>>>>> main
   border-radius: 14px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   display: grid;
@@ -42,8 +68,12 @@ body.auth-page {
 }
 
 /* ===== Inputs ===== */
+<<<<<<< HEAD
+#registerForm input {
+=======
 #registerForm input,
 #loginForm input {
+>>>>>>> main
   width: 100%;
   padding: 0.75rem 0.9rem;
   border-radius: 8px;
@@ -52,16 +82,24 @@ body.auth-page {
   transition: all 0.25s ease;
 }
 
+<<<<<<< HEAD
+#registerForm input:focus {
+=======
 #registerForm input:focus,
 #loginForm input:focus {
+>>>>>>> main
   outline: none;
   border-color: #ff4f9a;
   box-shadow: 0 0 0 3px rgba(255, 79, 154, 0.2);
 }
 
 /* ===== Button ===== */
+<<<<<<< HEAD
+#registerForm button {
+=======
 #registerForm button,
 #loginForm button {
+>>>>>>> main
   margin-top: 0.5rem;
   padding: 0.8rem;
   border-radius: 8px;
@@ -74,18 +112,28 @@ body.auth-page {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+<<<<<<< HEAD
+#registerForm button:hover {
+=======
 #registerForm button:hover,
 #loginForm button:hover {
+>>>>>>> main
   transform: translateY(-1px);
   box-shadow: 0 10px 20px rgba(123, 47, 247, 0.35);
 }
 
+<<<<<<< HEAD
+#registerForm button:active {
+=======
 #registerForm button:active,
 #loginForm button:active {
+>>>>>>> main
   transform: translateY(0);
   box-shadow: 0 6px 12px rgba(123, 47, 247, 0.3);
 }
 
+<<<<<<< HEAD
+=======
 /* ===== Switch link (Login <-> Register) ===== */
 .auth-switch {
   margin-top: 1rem;
@@ -104,6 +152,7 @@ body.auth-page {
   text-decoration: underline;
 }
 
+>>>>>>> main
 /* ===== Animations ===== */
 @keyframes fadeUp {
   from {
@@ -118,13 +167,21 @@ body.auth-page {
 
 /* ===== Mobile Friendly ===== */
 @media (max-width: 480px) {
+<<<<<<< HEAD
+  #registerForm {
+=======
   #registerForm,
   #loginForm {
+>>>>>>> main
     padding: 1.6rem;
     border-radius: 12px;
   }
 
+<<<<<<< HEAD
+  h2 {
+=======
   .auth-page h2 {
+>>>>>>> main
     font-size: 1.4rem;
   }
 }

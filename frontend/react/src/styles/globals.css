@@ -4,27 +4,42 @@
 
 @layer base {
   body {
-    @apply bg-[#f4f6fb] text-gray-900;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    @apply bg-background text-text-primary;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors;
+    @apply px-6 py-3 bg-gradient-primary text-white rounded-card-lg font-semibold hover:bg-gradient-hover transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 bg-card text-text-primary rounded-card-lg font-semibold border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-lg;
   }
   
   .card {
-    @apply bg-white rounded-2xl p-8 shadow-lg;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    @apply bg-card rounded-card-lg p-6 shadow-card hover:shadow-card-hover transition-all duration-300 border border-white/5;
   }
-
+  
+  .card-glass {
+    @apply bg-card/80 backdrop-blur-glass rounded-card-lg p-6 shadow-glass border border-white/10;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-card/50 border border-white/10 rounded-card text-text-primary placeholder-text-secondary focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300;
+  }
+  
+  .badge {
+    @apply px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium border border-primary/20;
+  }
+  
   .gradient-nav {
-    background: linear-gradient(135deg, #a855f7, #ec4899, #38bdf8);
+    background: linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%);
   }
-
+  
   .gradient-auth {
-    background: linear-gradient(135deg, #7b2ff7, #ff4f9a);
+    background: linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%);
   }
 
   .fade-in {
@@ -33,6 +48,10 @@
 
   .fade-up {
     animation: fadeUp 0.6s ease;
+  }
+  
+  .glass-effect {
+    @apply bg-card/60 backdrop-blur-glass border border-white/10;
   }
 }
 
@@ -65,8 +84,26 @@
 }
 
 .spinner {
-  border: 3px solid rgba(0, 0, 0, 0.1);
+  border: 3px solid rgba(255, 255, 255, 0.1);
   border-top-color: currentColor;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-card rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/50;
 }
