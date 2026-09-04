@@ -26,13 +26,13 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.23",
+    "axios": "^1.6.2",
+    "leaflet": "^1.9.4",
     "postcss": "^8.5.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-router-dom": "^7.12.0",
-    "tailwindcss": "^3.4.19",
-    "leaflet": "^1.9.4",
     "react-leaflet": "^5.0.0",
-    "axios": "^1.6.2"
+    "react-router-dom": "^7.12.0",
+    "tailwindcss": "^3.4.19"
   }
 }

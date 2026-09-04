@@ -44,16 +44,9 @@ export function useAuthOperations() {
     try {
       const res = await apiRequest('/auth/register', 'POST', payload);
 
-      if (res.token) {
-        setToken(res.token);
-        setContextToken(res.token);
-      }
-      if (res.user) {
-        setUser(res.user);
-        setContextUser(res.user);
-      }
-
-      navigate('/splash');
+      // Do not auto-login after registration
+      // Redirect to login page with success message
+      navigate('/login', { state: { registrationSuccess: true } });
       return { success: true };
     } catch (err) {
       const errorMessage = formatApiError(err);
