@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
+import { AdminRoute } from './components/layout/AdminRoute';
 import { AuthRedirect } from './components/layout/AuthRedirect';
 import { PublicOnlyRoute } from './components/layout/PublicOnlyRoute';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -20,6 +21,7 @@ const BlogViewPage = lazy(() => import('./pages/BlogViewPage').then(m => ({ defa
 const ResourcesPage = lazy(() => import('./pages/ResourcesPage').then(m => ({ default: m.ResourcesPage })));
 const LocalGuidePage = lazy(() => import('./pages/LocalGuidePage').then(m => ({ default: m.LocalGuidePage })));
 const FareAnalysisPage = lazy(() => import('./pages/FareAnalysisPage').then(m => ({ default: m.FareAnalysisPage })));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage').then(m => ({ default: m.AdminDashboardPage })));
 
 import './styles/globals.css';
 
@@ -56,6 +58,11 @@ function App() {
                 <Route path="/resources" element={<ResourcesPage />} />
                 <Route path="/local-guide" element={<LocalGuidePage />} />
                 <Route path="/fare-analysis" element={<FareAnalysisPage />} />
+              </Route>
+
+              {/* Administrator routes */}
+              <Route element={<AdminRoute />}>
+                <Route path="/admin" element={<AdminDashboardPage />} />
               </Route>
 
               {/* Default redirect - check auth first */}

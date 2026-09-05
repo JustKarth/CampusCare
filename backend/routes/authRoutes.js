@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { register, login, getProfile } = require('../controllers/authController');
+const { register, login, getProfile, updateAvatar, updateProfile } = require('../controllers/authController');
 const { authenticate } = require('../middleware/auth');
 const { handleValidationErrors } = require('../middleware/validate');
 
@@ -60,5 +60,36 @@ router.post(
 
 // GET /api/auth/profile
 router.get('/profile', authenticate, getProfile);
+
+// PUT /api/auth/profile
+router.put(
+  '/profile',
+  authenticate,
+  [
+    body('first_name')
+      .optional()
+      .trim()
+      .notEmpty()
+      .withMessage('First name cannot be empty'),
+    body('last_name')
+      .optional()
+      .trim()
+      .notEmpty()
+      .withMessage('Last name cannot be empty'),
+    body('graduation_year')
+      .optional()
+      .isInt({ min: 2000, max: 2100 })
+      .withMessage('Please enter a valid graduation year'),
+    body('course_id')
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage('Valid course ID is required')
+  ],
+  handleValidationErrors,
+  updateProfile
+);
+
+// PUT /api/auth/avatar
+router.put('/avatar', authenticate, updateAvatar);
 
 module.exports = router;

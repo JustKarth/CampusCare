@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
+const fs = require('fs');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 
 // Initialize database connection pool
@@ -16,11 +18,16 @@ const reactionRoutes = require('./routes/reactionRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const localGuideRoutes = require('./routes/localGuideRoutes');
 const referenceRoutes = require('./routes/referenceRoutes');
+const fareRoutes = require('./routes/fareRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const aiGuideRoutes = require('./routes/aiGuideRoutes');
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
+// Security middleware (allow cross-origin for static assets like avatars)
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 
 // CORS configuration - Allow frontend origins
 const corsOptions = {
@@ -43,6 +50,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static assets (avatars, college logos, app logos, images)
+app.use('/avatars', express.static(path.join(__dirname, 'public', 'avatars')));
+app.use('/colleges', express.static(path.join(__dirname, 'public', 'colleges')));
+app.use('/logos', express.static(path.join(__dirname, 'public', 'logos')));
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Logging middleware
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -50,8 +63,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined'));
 }
 
-// Root route
-app.get('/', (req, res) => {
+// API Health check routes
+app.get(['/api', '/api/health'], (req, res) => {
   res.json({ 
     success: true,
     message: 'Campus Care API running',
@@ -66,7 +79,22 @@ app.use('/api/blogs', commentRoutes);
 app.use('/api/blogs', reactionRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/local-guide', localGuideRoutes);
+app.use('/api/fares', fareRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/ai-guide', aiGuideRoutes);
 app.use('/api', referenceRoutes);
+
+// In production, serve React frontend SPA if dist exists
+const frontendDist = path.join(__dirname, '../frontend/react/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/avatars') || req.path.startsWith('/colleges') || req.path.startsWith('/logos')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
 
 // 404 handler (must be before error handler)
 app.use(notFound);

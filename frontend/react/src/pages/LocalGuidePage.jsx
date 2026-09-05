@@ -1,211 +1,272 @@
+import { useState, useMemo } from 'react';
 import { TopNav } from '../components/layout/TopNav';
 import { Footer } from '../components/layout/Footer';
+import { SEO } from '../components/common/SEO';
 import { useLocalGuide } from '../hooks/useLocalGuide';
-import { CategoryFilter } from '../components/localGuide/CategoryFilter';
 import { PlaceCard } from '../components/localGuide/PlaceCard';
+import { AddPlaceModal } from '../components/localGuide/AddPlaceModal';
 import { ErrorMessage } from '../components/common/ErrorMessage';
-import { LoadingSpinner } from '../components/common/LoadingSpinner';
-import { EmptyState } from '../components/common/EmptyState';
-import { usePagination } from '../hooks/usePagination';
-import { Pagination } from '../components/common/Pagination';
 import { PlaceCardSkeleton } from '../components/common/SkeletonLoader';
-import { useState } from 'react';
-import { useGeolocation } from '../hooks/useGeolocation';
-import { InteractiveMap } from '../components/localGuide/InteractiveMap';
-import { PlaceSearch } from '../components/localGuide/PlaceSearch';
-import { NearbyPlaces } from '../components/localGuide/NearbyPlaces';
-import { RouteCalculator } from '../components/localGuide/RouteCalculator';
-import { Link } from 'react-router-dom';
-
-// Local Guide Page
-// Replaces: local-guide.html + localGuide.js
+import { EmptyState } from '../components/common/EmptyState';
 
 export function LocalGuidePage() {
   const {
     categories,
     places,
+    onlinePlaces,
     selectedCategory,
     setSelectedCategory,
     loading,
+    onlineLoading,
     error,
     submitRating,
+    addPlace,
+    fetchOnlineFallback
   } = useLocalGuide();
 
-  const { location, loading: locationLoading } = useGeolocation();
-  const [activeTab, setActiveTab] = useState('nearby');
-  const [showMap, setShowMap] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState(null);
-  const [searchResults, setSearchResults] = useState([]);
-  const [currentRoute, setCurrentRoute] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'online'
 
-  // Pagination
-  const { paginatedItems, currentPage, totalPages, goToPage } = 
-    usePagination(places, 10);
+  // Filter places based on search query
+  const filteredPlaces = useMemo(() => {
+    if (!searchQuery.trim()) return places;
+    const q = searchQuery.toLowerCase();
+    return places.filter(
+      (p) =>
+        p.place_name?.toLowerCase().includes(q) ||
+        p.place_description?.toLowerCase().includes(q) ||
+        p.tags?.toLowerCase().includes(q) ||
+        p.address?.toLowerCase().includes(q)
+    );
+  }, [places, searchQuery]);
 
-  const tabs = [
-    { id: 'nearby', label: 'Nearby', icon: '🗺️' },
-    { id: 'search', label: 'Search', icon: '🔍' },
-    { id: 'routes', label: 'Routes', icon: '🛣️' },
-    { id: 'fares', label: 'Fare Analysis', icon: '💰' }
-  ];
-
-  const handlePlaceSelect = (place) => {
-    setSelectedPlace(place);
-    // Switch to nearby tab to show the selected place
-    setActiveTab('nearby');
+  // Handle claiming an online spot into the permanent student database
+  const handleClaimOnlineSpot = async (onlinePlace, rating, reviewText) => {
+    // Find matching category ID
+    const cat = categories.find((c) => c.category_name === onlinePlace.category_name) || categories[0];
+    const res = await addPlace({
+      placeName: onlinePlace.place_name,
+      categoryId: cat ? cat.category_id : 23,
+      placeDescription: onlinePlace.place_description,
+      address: onlinePlace.address,
+      distance: onlinePlace.distance,
+      lat: onlinePlace.lat,
+      lng: onlinePlace.lng,
+      priceRange: onlinePlace.price_range || '₹₹',
+      tags: onlinePlace.category_name,
+      initialRating: rating,
+      initialReview: reviewText
+    });
+    return res;
   };
 
-  const handleRouteCalculated = (routeData) => {
-    setCurrentRoute(routeData);
-  };
-
-  const handleSearch = (place) => {
-    setSearchResults([place]);
-    setSelectedPlace(place);
-    setActiveTab('nearby');
+  const categoryIcons = {
+    Food: '🍔',
+    Healthcare: '🏥',
+    'Local Hotspots': '📍',
+    'Tech Support': '💻',
+    'General Stores': '🛒',
+    Cinema: '🎬',
+    Arcades: '🎮',
+    Clothing: '👕',
+    Logistics: '📦',
+    Miscellaneous: '✨'
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background text-text-primary">
+      <SEO
+        title="Local Campus Guide - MNNIT"
+        description="For students, by students. Discover trusted cafes, dhabas, printing services, and hangouts around campus."
+      />
       <TopNav />
-      <main className="flex-1 p-6 md:p-10 fade-in">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl md:text-2xl">Local Guide</h2>
-            <button
-              onClick={() => setShowMap(!showMap)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              {showMap ? '📋 Hide Map' : '🗺️ Show Map'}
-            </button>
-          </div>
 
-          {/* Tabs */}
-          <div className="border-b border-gray-200 mb-6">
-            <nav className="flex space-x-8">
-              {tabs.map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <span className="mr-2">{tab.icon}</span>
-                  {tab.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          {/* Map (shown when enabled) */}
-          {showMap && (
-            <div className="mb-6">
-              <InteractiveMap
-                userLocation={location}
-                places={searchResults}
-                selectedPlace={selectedPlace}
-                route={currentRoute}
-                onPlaceClick={handlePlaceSelect}
-                showUserLocation={true}
-              />
+      <main className="flex-1 p-4 sm:p-6 md:p-10 max-w-6xl mx-auto w-full space-y-6 fade-in">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest mb-1">
+              <span>📍</span>
+              <span>For Students, By Students</span>
             </div>
-          )}
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+              Campus Local Guide
+            </h1>
+            <p className="text-sm text-text-secondary mt-1 max-w-2xl">
+              Student-reviewed cafes, dhabas, midnight food points, printing hubs, and hangout spots around MNNIT.
+            </p>
+          </div>
 
-          {/* Tab Content */}
-          <ErrorMessage message={error} className="mb-6" />
+          <button
+            type="button"
+            onClick={() => setIsAddModalOpen(true)}
+            className="btn-primary text-xs sm:text-sm px-5 py-3 rounded-xl flex items-center gap-2 shadow-xl shadow-primary/25 hover:scale-[1.02] transition-all self-start md:self-auto"
+          >
+            <span className="text-base">➕</span>
+            <span>Recommend a Spot</span>
+          </button>
+        </div>
 
-          {activeTab === 'nearby' && (
-            <NearbyPlaces onPlaceSelect={handlePlaceSelect} />
-          )}
+        {/* Search & Category Filter Bar */}
+        <div className="card-glass rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+          {/* Search Box */}
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search spots, food dishes, Xerox, cafes, medicines..."
+              className="w-full px-4 py-3 pl-11 bg-card/60 backdrop-blur-md rounded-xl border border-white/10 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+            />
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-base">
+              🔍
+            </span>
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-text-secondary hover:text-white"
+              >
+                ✕
+              </button>
+            )}
+          </div>
 
-          {activeTab === 'search' && (
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Search Places</h3>
-                <PlaceSearch
-                  onPlaceSelect={handleSearch}
-                  placeholder="Search for restaurants, hospitals, schools..."
+          {/* Category Chips Scroller */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+            <button
+              type="button"
+              onClick={() => setSelectedCategory('')}
+              className={`px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition-all flex items-center gap-1.5 flex-shrink-0 ${
+                selectedCategory === ''
+                  ? 'bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]'
+                  : 'bg-card/40 border border-white/10 text-text-secondary hover:bg-card hover:text-white'
+              }`}
+            >
+              <span>🌟</span>
+              <span>All Spots</span>
+            </button>
+
+            {categories.map((cat) => (
+              <button
+                key={cat.category_id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.category_name)}
+                className={`px-3.5 py-2 rounded-xl font-bold whitespace-nowrap transition-all flex items-center gap-1.5 flex-shrink-0 ${
+                  selectedCategory === cat.category_name
+                    ? 'bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]'
+                    : 'bg-card/40 border border-white/10 text-text-secondary hover:bg-card hover:text-white'
+                }`}
+              >
+                <span>{categoryIcons[cat.category_name] || '📍'}</span>
+                <span>{cat.category_name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Add Spot Modal */}
+        {isAddModalOpen && (
+          <AddPlaceModal
+            categories={categories}
+            onSubmit={async (data) => {
+              const res = await addPlace(data);
+              return res;
+            }}
+            onClose={() => setIsAddModalOpen(false)}
+          />
+        )}
+
+        <ErrorMessage message={error} className="mb-4" />
+
+        {/* Content Section */}
+        {loading ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <PlaceCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : filteredPlaces.length > 0 ? (
+          /* PRIMARY DISPLAY: Student Feeded Spots */
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                <span>🎓</span>
+                <span>Student-Verified Recommendations ({filteredPlaces.length})</span>
+              </span>
+              <span className="text-[11px] text-primary">Ranked by Student Ratings</span>
+            </div>
+
+            <div className="space-y-4">
+              {filteredPlaces.map((place) => (
+                <PlaceCard
+                  key={place.place_id}
+                  place={place}
+                  onSubmitRating={submitRating}
                 />
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* FALLBACK DISPLAY: Online Sources when no feeded data exists */
+          <div className="space-y-6">
+            <div className="p-5 rounded-2xl bg-card/40 border border-dashed border-white/15 text-center space-y-2">
+              <span className="text-3xl block">🌐</span>
+              <h3 className="font-bold text-text-primary text-base">
+                No Student Reviews for this Category Yet
+              </h3>
+              <p className="text-xs text-text-secondary max-w-md mx-auto">
+                Showing nearest verified facilities discovered from online directory around campus. Be the first student to review or claim any of these spots!
+              </p>
+            </div>
+
+            {onlineLoading ? (
+              <div className="space-y-4">
+                {[...Array(3)].map((_, i) => (
+                  <PlaceCardSkeleton key={i} />
+                ))}
               </div>
-              
-              {searchResults.length > 0 && (
+            ) : onlinePlaces.length > 0 ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                  <span className="text-xs font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                    <span>📍</span>
+                    <span>Discovered Nearby from Online Sources ({onlinePlaces.length})</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => fetchOnlineFallback(selectedCategory)}
+                    className="text-[11px] text-primary hover:underline flex items-center gap-1"
+                  >
+                    <span>🔄</span>
+                    <span>Refresh Online Search</span>
+                  </button>
+                </div>
+
                 <div className="space-y-4">
-                  <h4 className="text-md font-medium text-gray-700">Search Results</h4>
-                  {searchResults.map((place, index) => (
-                    <div key={index} className="bg-white border border-gray-200 rounded-lg p-4">
-                      <h5 className="font-medium">{place.display_name}</h5>
-                      <p className="text-sm text-gray-600">{place.class} • {place.type}</p>
-                      <button
-                        onClick={() => handlePlaceSelect(place)}
-                        className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
-                      >
-                        View Details
-                      </button>
-                    </div>
+                  {onlinePlaces.map((place) => (
+                    <PlaceCard
+                      key={place.place_id}
+                      place={place}
+                      onSubmitRating={submitRating}
+                      onClaimOnlineSpot={handleClaimOnlineSpot}
+                    />
                   ))}
                 </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'routes' && (
-            <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Route Calculator</h3>
-              <RouteCalculator onRouteCalculated={handleRouteCalculated} />
-            </div>
-          )}
-
-          {activeTab === 'fares' && (
-            <div className="space-y-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <div className="flex items-center space-x-4">
-                  <span className="text-3xl">💰</span>
-                  <div>
-                    <h3 className="text-lg font-semibold text-blue-900">Fare Analysis</h3>
-                    <p className="text-blue-700">Submit and analyze transportation fares to different places</p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <Link
-                    to="/fare-analysis"
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Open Fare Analysis
-                    <span className="ml-2">→</span>
-                  </Link>
-                </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <div className="text-center">
-                    <span className="text-2xl">📍</span>
-                    <h4 className="font-medium text-gray-900 mt-2">Search Places</h4>
-                    <p className="text-sm text-gray-600 mt-1">Find any destination</p>
-                  </div>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <div className="text-center">
-                    <span className="text-2xl">💵</span>
-                    <h4 className="font-medium text-gray-900 mt-2">Submit Fares</h4>
-                    <p className="text-sm text-gray-600 mt-1">Share transportation costs</p>
-                  </div>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <div className="text-center">
-                    <span className="text-2xl">📊</span>
-                    <h4 className="font-medium text-gray-900 mt-2">View Analysis</h4>
-                    <p className="text-sm text-gray-600 mt-1">See fare distributions</p>
-                  </div>
-                </div>
+            ) : (
+              <div className="card-glass rounded-2xl p-8 text-center">
+                <EmptyState
+                  message="No places found nearby. Click 'Recommend a Spot' above to add one!"
+                  icon="📍"
+                />
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </main>
+
       <Footer />
     </div>
   );

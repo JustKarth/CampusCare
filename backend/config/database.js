@@ -3,17 +3,28 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const mysql = require('mysql2/promise');
 
-// Create a connection pool for better performance
-const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'campus_care',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+// Support single DATABASE_URL or individual credentials, with optional SSL for cloud hosts
+const poolConfig = process.env.DATABASE_URL
+  ? {
+      uri: process.env.DATABASE_URL,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0
+    }
+  : {
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 3306,
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_NAME || 'campus_care',
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0
+    };
+
+const pool = mysql.createPool(poolConfig);
 
 // Test the database connection (non-blocking)
 pool.getConnection()

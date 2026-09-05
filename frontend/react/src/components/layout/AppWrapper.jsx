@@ -1,6 +1,7 @@
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { OfflineBanner } from '../common/OfflineBanner';
 import { KeyboardShortcutsHelp } from '../common/KeyboardShortcutsHelp';
+import { AiGuideWidget } from '../aiGuide/AiGuideWidget';
 
 // App wrapper component for global features
 export function AppWrapper({ children }) {
@@ -11,6 +12,7 @@ export function AppWrapper({ children }) {
       <OfflineBanner />
       <KeyboardShortcutsHelp />
       {children}
+      <AiGuideWidget />
     </>
   );
 }

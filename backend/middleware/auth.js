@@ -104,7 +104,32 @@ const optionalAuth = async (req, res, next) => {
   }
 };
 
+// Middleware to ensure user is an administrator
+const requireAdmin = (req, res, next) => {
+  if (!req.user || !req.user.isAdmin) {
+    return res.status(403).json({
+      success: false,
+      message: 'Forbidden: Administrator privileges required.'
+    });
+  }
+  next();
+};
+
+// Middleware to ensure user is moderator or admin
+const requireModeratorOrAdmin = (req, res, next) => {
+  if (!req.user || (!req.user.isModerator && !req.user.isAdmin)) {
+    return res.status(403).json({
+      success: false,
+      message: 'Forbidden: Moderator or Administrator privileges required.'
+    });
+  }
+  next();
+};
+
 module.exports = {
   authenticate,
-  optionalAuth
+  optionalAuth,
+  requireAdmin,
+  requireModeratorOrAdmin
 };
+

@@ -6,7 +6,7 @@ import { ErrorMessage } from '../common/ErrorMessage';
 // Avatar Selector component
 // Allows users to select from available backend avatars
 export function AvatarSelector() {
-  const { availableAvatars, currentAvatar, loading, error, updateAvatar } = useAvatar();
+  const { availableAvatars, currentAvatar, loading, error, updateAvatar, getAvatarUrl } = useAvatar();
   const [selectedAvatar, setSelectedAvatar] = useState(currentAvatar);
   const [updating, setUpdating] = useState(false);
 
@@ -50,7 +50,7 @@ export function AvatarSelector() {
         {currentAvatar ? (
           <div className="flex items-center gap-3">
             <img
-              src={`http://localhost:5000/avatars/${currentAvatar}`}
+              src={getAvatarUrl(currentAvatar)}
               alt="Current avatar"
               className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
             />

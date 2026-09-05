@@ -37,7 +37,15 @@ class User {
       native_city = null
     } = userData;
 
-    // Convert undefined to null for optional fields (MySQL doesn't accept undefined)
+    // Sanitize optional and numeric fields so MySQL receives clean nulls/types
+    const cleanMiddleName = middle_name && String(middle_name).trim() ? String(middle_name).trim() : null;
+    const cleanNativeCity = native_city && String(native_city).trim() ? String(native_city).trim() : null;
+    const cleanAvatarId = avatar_id && !isNaN(parseInt(avatar_id, 10)) ? parseInt(avatar_id, 10) : 1;
+    const cleanNativeStateId = native_state_id && !isNaN(parseInt(native_state_id, 10)) ? parseInt(native_state_id, 10) : null;
+    const cleanCollegeId = parseInt(college_id, 10);
+    const cleanCourseId = parseInt(course_id, 10);
+    const cleanGradYear = parseInt(graduation_year, 10);
+
     const [result] = await pool.execute(
       `INSERT INTO user_profiles 
       (email, hashed_password, reg_no, first_name, middle_name, last_name, 
@@ -45,19 +53,19 @@ class User {
        native_state_id, native_city) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        email,
+        email ? String(email).trim().toLowerCase() : null,
         hashed_password,
-        reg_no,
-        first_name,
-        middle_name ?? null,
-        last_name,
-        college_id,
-        course_id,
-        graduation_year,
+        reg_no ? String(reg_no).trim() : null,
+        first_name ? String(first_name).trim() : null,
+        cleanMiddleName,
+        last_name ? String(last_name).trim() : null,
+        cleanCollegeId,
+        cleanCourseId,
+        cleanGradYear,
         date_of_birth,
-        avatar_id ?? null,
-        native_state_id ?? null,
-        native_city ?? null
+        cleanAvatarId,
+        cleanNativeStateId,
+        cleanNativeCity
       ]
     );
 
@@ -73,7 +81,10 @@ class User {
       'avatar_id',
       'native_state_id',
       'native_city',
-      'date_of_birth'
+      'date_of_birth',
+      'graduation_year',
+      'course_id',
+      'reg_no'
     ];
 
     const fieldsToUpdate = [];

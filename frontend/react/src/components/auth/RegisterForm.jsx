@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthOperations } from '../../hooks/useAuth';
-import { useDropdownData } from '../../hooks/useDropdownData';
 import { ErrorMessage } from '../common/ErrorMessage';
 import { LoadingSpinner } from '../common/LoadingSpinner';
+import { CollegeLogo } from '../common/CollegeLogo';
 import { validateRegistrationForm } from '../../utils/validation';
+import { apiRequest } from '../../services/apiClient';
 
 // Register Form component
 // Replaces: register.html form + auth.js register handler
@@ -25,8 +26,87 @@ export function RegisterForm() {
     native_city: '',
   });
   const [fieldErrors, setFieldErrors] = useState({});
+  const [states, setStates] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [loadingRefData, setLoadingRefData] = useState(true);
   const { register, loading, error } = useAuthOperations();
-  const { courses, states, loading: dropdownLoading, error: dropdownError } = useDropdownData();
+
+  useEffect(() => {
+    const fetchRefData = async () => {
+      try {
+        setLoadingRefData(true);
+        const [statesRes, coursesRes] = await Promise.all([
+          apiRequest('/states', 'GET').catch(() => ({ states: [] })),
+          apiRequest('/courses', 'GET').catch(() => ({ courses: [] })),
+        ]);
+
+        if (statesRes.states) {
+          setStates(statesRes.states);
+        }
+        if (coursesRes.courses) {
+          setCourses(coursesRes.courses);
+        }
+      } catch (err) {
+        console.error('Failed to load registration reference data:', err);
+      } finally {
+        setLoadingRefData(false);
+      }
+    };
+
+    fetchRefData();
+  }, []);
+
+  // Detect email domain to auto-filter courses
+  const detectedDomain = useMemo(() => {
+    if (!formData.email || !formData.email.includes('@')) return '';
+    const parts = formData.email.split('@');
+    return parts[1] ? parts[1].trim().toLowerCase() : '';
+  }, [formData.email]);
+
+  const filteredCourses = useMemo(() => {
+    if (!detectedDomain) return courses;
+    const domainMatches = courses.filter((c) => {
+      const cleanEmailDomain = (c.emailDomain || '').toLowerCase().replace(/^@+/, '');
+      return cleanEmailDomain === detectedDomain;
+    });
+    return domainMatches.length > 0 ? domainMatches : courses;
+  }, [courses, detectedDomain]);
+
+  const uniqueFilteredCourses = useMemo(() => {
+    const seen = new Set();
+    return filteredCourses.filter((c) => {
+      const key = `${c.name?.trim().toLowerCase()}_${c.collegeId}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [filteredCourses]);
+
+  const uniqueStates = useMemo(() => {
+    const seen = new Set();
+    return states.filter((s) => {
+      const name = s.name?.trim().toLowerCase();
+      if (!name || seen.has(name)) return false;
+      seen.add(name);
+      return true;
+    });
+  }, [states]);
+
+  const detectedCollege = useMemo(() => {
+    if (!detectedDomain) return null;
+    const match = courses.find((c) => {
+      const cleanEmailDomain = (c.emailDomain || '').toLowerCase().replace(/^@+/, '');
+      return cleanEmailDomain === detectedDomain;
+    });
+    if (!match) return null;
+    return {
+      collegeId: match.collegeId,
+      collegeName: match.collegeName,
+      emailDomain: match.emailDomain || detectedDomain,
+    };
+  }, [courses, detectedDomain]);
+
+  const detectedCollegeName = detectedCollege?.collegeName || '';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,19 +133,19 @@ export function RegisterForm() {
 
     setFieldErrors({});
 
-    // Build payload (exclude confirm_password, convert numbers)
+    // Build payload (exclude confirm_password, convert numbers, cleanly nullify empties)
     const payload = {
       email: formData.email.trim(),
       password: formData.password,
       reg_no: formData.reg_no.trim(),
       first_name: formData.first_name.trim(),
-      middle_name: formData.middle_name.trim() || undefined,
+      middle_name: formData.middle_name.trim() || null,
       last_name: formData.last_name.trim(),
       course_id: formData.course_id ? parseInt(formData.course_id, 10) : undefined,
       graduation_year: formData.graduation_year ? parseInt(formData.graduation_year, 10) : undefined,
       date_of_birth: formData.date_of_birth,
-      native_state_id: formData.native_state_id ? parseInt(formData.native_state_id, 10) : undefined,
-      native_city: formData.native_city.trim() || undefined,
+      native_state_id: formData.native_state_id ? parseInt(formData.native_state_id, 10) : null,
+      native_city: formData.native_city.trim() || null,
     };
 
     await register(payload);
@@ -75,14 +155,7 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl space-y-4 fade-up">
-      <ErrorMessage message={error || dropdownError} />
-
-      {dropdownLoading && (
-        <div className="flex items-center justify-center py-4">
-          <LoadingSpinner size="sm" className="text-blue-600" />
-          <span className="ml-2 text-gray-600">Loading form options...</span>
-        </div>
-      )}
+      <ErrorMessage message={error} />
 
       <div>
         <input
@@ -90,18 +163,48 @@ export function RegisterForm() {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="College Email"
+          placeholder="College Email (e.g. student@mnnit.ac.in)"
           required
           disabled={loading}
-          className={`w-full px-4 py-3 rounded-lg border transition-all disabled:opacity-50 ${
+          className={`input-field ${
             getFieldError('email')
-              ? 'border-red-300 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-pink-500'
-          } focus:outline-none focus:ring-2 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)]`}
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+              : ''
+          }`}
         />
         {getFieldError('email') && (
-          <p className="text-red-600 text-sm mt-1">{getFieldError('email')}</p>
+          <p className="text-red-400 text-sm mt-1">{getFieldError('email')}</p>
         )}
+
+        {/* Institute Detection Banner with prominent Institute Logo */}
+        {detectedCollege ? (
+          <div className="mt-3 p-4 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center gap-4 shadow-xl animate-fadeIn">
+            <CollegeLogo
+              collegeId={detectedCollege.collegeId}
+              collegeName={detectedCollege.collegeName}
+              emailDomain={detectedCollege.emailDomain}
+              size="xl"
+              className="w-16 h-16 md:w-20 md:h-20 bg-white p-2 rounded-2xl shadow-lg border border-white/40 flex-shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Institute Recognized</span>
+              </div>
+              <h3 className="text-white font-extrabold text-base md:text-lg leading-snug mt-0.5">
+                {detectedCollege.collegeName}
+              </h3>
+              <p className="text-white/80 text-xs mt-0.5 flex items-center gap-1">
+                <span>📍</span> Domain verified: <span className="font-mono text-emerald-200">@{detectedDomain}</span>
+              </p>
+            </div>
+          </div>
+        ) : formData.email.includes('@') && detectedDomain.length > 2 ? (
+          <p className="text-amber-300 text-xs mt-2 font-medium flex items-center gap-1">
+            <span>ℹ️</span>
+            <span>Domain @{detectedDomain} not yet registered. Please use your official college email.</span>
+          </p>
+        ) : null}
       </div>
 
       <input
@@ -109,9 +212,9 @@ export function RegisterForm() {
         name="password"
         value={formData.password}
         onChange={handleChange}
-        placeholder="Password"
+        placeholder="Password (min 6 characters)"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -122,7 +225,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Confirm Password"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -133,7 +236,7 @@ export function RegisterForm() {
         onChange={handleChange}
         placeholder="Registration Number"
         required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="input-field"
         disabled={loading}
       />
 
@@ -145,7 +248,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="First Name"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="text"
@@ -153,7 +256,7 @@ export function RegisterForm() {
           value={formData.middle_name}
           onChange={handleChange}
           placeholder="Middle Name (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
         <input
           type="text"
@@ -162,7 +265,7 @@ export function RegisterForm() {
           onChange={handleChange}
           placeholder="Last Name"
           required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="input-field"
         />
       </div>
 
@@ -173,71 +276,92 @@ export function RegisterForm() {
             value={formData.course_id}
             onChange={handleChange}
             required
-            disabled={loading || dropdownLoading}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+            disabled={loading || loadingRefData}
+            className={`input-field ${
+              getFieldError('course_id')
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                : ''
+            }`}
           >
-            <option value="">Select Course</option>
-            {courses.map((course) => (
-              <option key={course.id} value={course.id}>
-                {course.name}
+            <option value="">
+              {loadingRefData ? 'Loading courses...' : 'Select Course *'}
+            </option>
+            {uniqueFilteredCourses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name} {!detectedCollegeName && c.collegeName ? `(${c.collegeName})` : ''}
               </option>
             ))}
           </select>
+          {getFieldError('course_id') && (
+            <p className="text-red-400 text-sm mt-1">{getFieldError('course_id')}</p>
+          )}
         </div>
-        <input
-          type="number"
-          name="graduation_year"
-          value={formData.graduation_year}
-          onChange={handleChange}
-          placeholder="Graduation Year"
-          required
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-          disabled={loading}
-        />
+        <div>
+          <input
+            type="number"
+            name="graduation_year"
+            value={formData.graduation_year}
+            onChange={handleChange}
+            placeholder="Graduation Year (e.g. 2026)"
+            required
+            min="2000"
+            max="2100"
+            className="input-field"
+          />
+          {getFieldError('graduation_year') && (
+            <p className="text-red-400 text-sm mt-1">{getFieldError('graduation_year')}</p>
+          )}
+        </div>
       </div>
 
-      <input
-        type="date"
-        name="date_of_birth"
-        value={formData.date_of_birth}
-        onChange={handleChange}
-        required
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
-        disabled={loading}
-      />
+      <div>
+        <label className="block text-xs text-text-secondary mb-1">Date of Birth *</label>
+        <input
+          type="date"
+          name="date_of_birth"
+          value={formData.date_of_birth}
+          onChange={handleChange}
+          required
+          max={new Date().toISOString().split('T')[0]}
+          className="input-field"
+          disabled={loading}
+        />
+        {getFieldError('date_of_birth') && (
+          <p className="text-red-400 text-sm mt-1">{getFieldError('date_of_birth')}</p>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <select
-            name="native_state_id"
-            value={formData.native_state_id}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
-            disabled={loading || dropdownLoading}
-          >
-            <option value="">Select State (optional)</option>
-            {states.map((state) => (
-              <option key={state.id} value={state.id}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          name="native_state_id"
+          value={formData.native_state_id}
+          onChange={handleChange}
+          disabled={loading || loadingRefData}
+          className="input-field"
+        >
+          <option value="">
+            {loadingRefData ? 'Loading states...' : 'Select Native State (Optional)'}
+          </option>
+          {uniqueStates.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           name="native_city"
           value={formData.native_city}
           onChange={handleChange}
           placeholder="Native City (optional)"
-          className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500"
-          disabled={loading}
+          className="input-field"
         />
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="btn-primary"
       >
         {loading ? (
           <>
@@ -249,15 +373,12 @@ export function RegisterForm() {
         )}
       </button>
 
-      <div className="text-center pt-4 border-t border-gray-200">
-        <p className="text-gray-600 text-sm mb-3">Already have an account?</p>
-        <Link 
-          to="/login" 
-          className="inline-block w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
-        >
-          Sign In to Your Account
+      <p className="text-center text-text-secondary text-sm">
+        Already registered?{' '}
+        <Link to="/login" className="text-primary font-semibold hover:text-primary-light transition-colors">
+          Login here
         </Link>
-      </div>
+      </p>
     </form>
   );
 }

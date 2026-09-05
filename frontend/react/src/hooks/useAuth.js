@@ -81,11 +81,32 @@ export function useAuthOperations() {
     }
   };
 
+  const updateProfile = async (payload) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiRequest('/auth/profile', 'PUT', payload, true);
+      if (res.user) {
+        setUser(res.user);
+        setContextUser(res.user);
+      }
+      return { success: true, user: res.user, message: res.message };
+    } catch (err) {
+      const errorMessage = formatApiError(err);
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     login,
     register,
     getProfile,
+    updateProfile,
     loading,
     error,
   };
 }
+

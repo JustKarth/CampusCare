@@ -30,11 +30,16 @@ export async function apiRequest(endpoint, method = 'GET', body = null, token = 
       resolvedToken = token;
     }
 
+    let cleanEndpoint = endpoint;
+    if (cleanEndpoint.startsWith('/api/') && API_BASE_URL.endsWith('/api')) {
+      cleanEndpoint = cleanEndpoint.substring(4);
+    }
+
     if (resolvedToken) {
       headers['Authorization'] = `Bearer ${resolvedToken}`;
     }
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}${cleanEndpoint}`, {
       method,
       headers,
       body: body ? JSON.stringify(body) : null,

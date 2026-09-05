@@ -1,10 +1,12 @@
+SET NAMES utf8mb4;
+SET default_storage_engine = InnoDB;
 CREATE DATABASE IF NOT EXISTS campus_care;
 USE campus_care;
 
 CREATE TABLE avatars (
-	avatar_id INT AUTO_INCREMENT PRIMARY KEY,
-    avatar_url VARCHAR(2048) NOT NULL,
-    UNIQUE(avatar_url)
+    avatar_id INT AUTO_INCREMENT PRIMARY KEY,
+    avatar_url VARCHAR(512) NOT NULL,
+    UNIQUE KEY uq_avatar_url (avatar_url)
 );
 
 CREATE TABLE states (
@@ -24,11 +26,17 @@ CREATE TABLE colleges (
 );
 
 CREATE TABLE courses (
-	course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
     college_id INT NOT NULL,
     course_name VARCHAR(128) NOT NULL,
-    UNIQUE KEY(course_name, college_id),
-    FOREIGN KEY (college_id) REFERENCES colleges(college_id)
+
+    UNIQUE KEY uq_course_college (course_id, college_id),
+    UNIQUE KEY uq_course_name (course_name, college_id),
+
+    FOREIGN KEY (college_id)
+        REFERENCES colleges(college_id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
 );
 
 CREATE TABLE local_guide_categories(
@@ -63,9 +71,9 @@ CREATE TABLE user_profiles (
 );
 
 CREATE TABLE blog_images (
-	blog_image_id INT AUTO_INCREMENT PRIMARY KEY,
-    blog_image_url VARCHAR(2048) NOT NULL,
-    UNIQUE(blog_image_url)
+    blog_image_id INT AUTO_INCREMENT PRIMARY KEY,
+    blog_image_url VARCHAR(512) NOT NULL,
+    UNIQUE KEY uq_blog_image_url (blog_image_url)
 );
 
 CREATE TABLE blog (
@@ -112,9 +120,9 @@ CREATE TABLE academic_resources (
     college_id INT NOT NULL,
     resource_title VARCHAR(255) NOT NULL,
     resource_description TEXT,
-    resource_link VARCHAR(2048) NOT NULL,
+    resource_link VARCHAR(512) NOT NULL,
     FOREIGN KEY (college_id) REFERENCES colleges(college_id),
-    UNIQUE (college_id, resource_link)
+    UNIQUE KEY uq_resource_link (college_id, resource_link)
 );
 
 CREATE TABLE places (
@@ -132,30 +140,39 @@ CREATE TABLE places (
     UNIQUE (place_name, college_id)
 );
 
-CREATE TABLE place_rating(
-	place_id INT NOT NULL,
+CREATE TABLE place_rating (
+    place_id INT NOT NULL,
     user_id INT NOT NULL,
     rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    review_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES user_profiles(user_id) ON DELETE CASCADE,
     PRIMARY KEY(place_id, user_id)
 );
 
-CREATE TABLE fares(
+CREATE TABLE fares (
     fare_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    start_id INT NOT NULL,
-    destination_id INT NOT NULL,
-    fare INT NOT NULL,
-    UNIQUE(user_id, start_id, destination_id),
+    college_id INT NOT NULL,
+    from_place_name VARCHAR(255) NOT NULL,
+    from_lat DECIMAL(9,6),
+    from_lng DECIMAL(9,6),
+    to_place_name VARCHAR(255) NOT NULL,
+    to_lat DECIMAL(9,6),
+    to_lng DECIMAL(9,6),
+    fare_amount INT NOT NULL,
+    vehicle_type ENUM('auto','cab','e-rickshaw','bus','other') DEFAULT 'auto',
+    notes VARCHAR(500),
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user_profiles(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (start_id) REFERENCES places(place_id) ON DELETE CASCADE,
-    fOREIGN KEY (destination_id) REFERENCES places(place_id) ON DELETE CASCADE
+    FOREIGN KEY (college_id) REFERENCES colleges(college_id)
 );
 
 CREATE TABLE dashboard_images (
     image_id INT AUTO_INCREMENT PRIMARY KEY,
     college_id INT NOT NULL,
-    image_url VARCHAR(2048) NOT NULL,
-    UNIQUE(image_url)
+    image_url VARCHAR(512) NOT NULL,
+    UNIQUE KEY uq_dashboard_image(image_url),
+    FOREIGN KEY (college_id) REFERENCES colleges(college_id)
 );
