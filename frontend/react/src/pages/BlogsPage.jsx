@@ -68,7 +68,14 @@ export function BlogsPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search blogs..."
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200"
+              style={{
+                background: '#1a2235',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: '#f0f4ff',
+              }}
+              onFocus={e => e.target.style.borderColor = 'rgba(123,47,247,0.7)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
             />
           </div>
 

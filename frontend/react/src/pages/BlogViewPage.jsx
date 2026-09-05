@@ -96,26 +96,26 @@ export function BlogViewPage() {
           <h2 className="text-xl md:text-2xl mb-6">Blog</h2>
           
           <div className="card mb-6 fade-in">
-            <h3 className="text-xl md:text-2xl font-semibold mb-4 text-gray-800" dangerouslySetInnerHTML={{ __html: safeContent(blog.blogTitle) }}></h3>
+            <h3 className="text-xl md:text-2xl font-bold mb-4 text-text-primary" dangerouslySetInnerHTML={{ __html: safeContent(blog.blogTitle) }}></h3>
             
             {/* Author and timestamp */}
-            <div className="flex items-center gap-3 mb-4 pb-4 border-b">
+            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/10">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
                   {getAuthorName().charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <div className="font-medium text-gray-800">{getAuthorName()}</div>
-                  <div className="text-sm text-gray-500">{formatDate(blog.createdAt)}</div>
+                  <div className="font-semibold text-text-primary">{getAuthorName()}</div>
+                  <div className="text-xs text-text-secondary">{formatDate(blog.createdAt)}</div>
                 </div>
               </div>
             </div>
             
             <div 
-              className="text-gray-700 text-sm md:text-base leading-relaxed mb-4 whitespace-pre-wrap"
+              className="text-text-primary/90 text-sm md:text-base leading-relaxed mb-4 whitespace-pre-wrap"
               dangerouslySetInnerHTML={{ __html: safeContent(blog.blogContent) }}
             ></div>
-            <div className="flex items-center gap-4 pt-4 border-t">
+            <div className="flex items-center gap-4 pt-4 border-t border-white/10">
               <button
                 onClick={likeBlog}
                 disabled={loadingLikeStatus}

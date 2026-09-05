@@ -117,16 +117,20 @@ export function LocalGuidePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search spots, food dishes, Xerox, cafes, medicines..."
-              className="w-full px-4 py-3 pl-11 bg-card/60 backdrop-blur-md rounded-xl border border-white/10 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+              className="w-full px-4 py-3 pl-11 rounded-xl border border-white/15 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+              style={{
+                backgroundColor: '#1a2235',
+                color: '#f0f4ff',
+              }}
             />
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-base">
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-base pointer-events-none">
               🔍
             </span>
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-text-secondary hover:text-white"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-text-secondary hover:text-white px-1.5 py-0.5 rounded"
               >
                 ✕
               </button>

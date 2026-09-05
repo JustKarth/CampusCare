@@ -24,7 +24,13 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
     : 'Anonymous';
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4 mb-3 hover:bg-gray-100 transition-colors duration-200">
+    <div
+      className="rounded-xl p-4 mb-3 transition-colors duration-200"
+      style={{
+        backgroundColor: '#151c2c',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1">
           <div className="flex items-start gap-2 mb-2">
@@ -38,16 +44,16 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
             )}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-semibold text-gray-700">{authorName}</span>
+                <span className="text-sm font-semibold" style={{ color: '#c4b5fd' }}>{authorName}</span>
                 {isOwner && (
-                  <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">You</span>
+                  <span className="text-xs text-primary bg-primary/20 border border-primary/30 px-2 py-0.5 rounded-full">You</span>
                 )}
               </div>
-              <p className="text-gray-800 text-sm leading-relaxed">{escapeHtml(comment.commentContent)}</p>
+              <p className="text-sm leading-relaxed" style={{ color: '#f0f4ff' }}>{escapeHtml(comment.commentContent)}</p>
             </div>
           </div>
           {comment.createdAt && (
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs mt-2" style={{ color: '#8b9ab5' }}>
               {new Date(comment.createdAt).toLocaleString()}
             </p>
           )}

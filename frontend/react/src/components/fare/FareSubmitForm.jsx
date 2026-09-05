@@ -144,7 +144,7 @@ export function FareSubmitForm({
           Fare Amount Paid (in ₹)
         </label>
         <div className="relative max-w-xs">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-primary">₹</span>
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-primary pointer-events-none">₹</span>
           <input
             type="number"
             min="1"
@@ -153,7 +153,11 @@ export function FareSubmitForm({
             value={fareAmount}
             onChange={(e) => setFareAmount(e.target.value)}
             placeholder="e.g. 80"
-            className="w-full pl-9 pr-4 py-3 bg-card/60 backdrop-blur-md rounded-xl border border-white/15 text-text-primary text-base font-bold focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full pl-9 pr-4 py-3 rounded-xl border border-white/15 text-text-primary text-base font-bold focus:outline-none focus:ring-2 focus:ring-primary"
+            style={{
+              backgroundColor: '#151c2c',
+              color: '#f0f4ff',
+            }}
           />
         </div>
       </div>
@@ -169,7 +173,11 @@ export function FareSubmitForm({
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="e.g. Outside station they quote ₹150; walk 100m to the main gate or negotiate down to ₹80. Shared auto from Teliyarganj is ₹20."
-          className="w-full px-4 py-2.5 bg-card/60 backdrop-blur-md rounded-xl border border-white/15 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-text-secondary/50"
+          className="w-full px-4 py-2.5 rounded-xl border border-white/15 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          style={{
+            backgroundColor: '#151c2c',
+            color: '#f0f4ff',
+          }}
         />
         <span className="text-[10px] text-text-secondary block text-right mt-1">
           {notes.length}/500 characters

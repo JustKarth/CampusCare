@@ -199,7 +199,11 @@ export function FarePlaceSearch({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
-          className="w-full px-4 py-3 pl-11 pr-10 bg-card/60 backdrop-blur-md rounded-xl border border-white/10 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-sm"
+          className="w-full px-4 py-3 pl-11 pr-10 rounded-xl border border-white/15 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          style={{
+            backgroundColor: '#1a2235',
+            color: '#f0f4ff',
+          }}
         />
 
         <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-base">

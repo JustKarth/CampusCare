@@ -73,7 +73,7 @@ export function TopNav() {
 
       {/* Right section: Admin Console at end + User Profile + Logout */}
       <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-        {user?.isAdmin && (
+        {Boolean(user?.isAdmin) && (
           <Link
             to="/admin"
             className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border transition-all duration-300 hover:scale-105 shadow-md ${

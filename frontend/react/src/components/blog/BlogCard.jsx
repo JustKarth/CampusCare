@@ -48,31 +48,42 @@ export function BlogCard({ blog, onLike, isLiked = false, isLiking = false }) {
   };
 
   return (
-    <div className="bg-white rounded-xl p-5 shadow-md mb-5 hover:shadow-lg transition-all duration-200 fade-in">
-      <h5 className="text-lg font-semibold mb-2 text-gray-800" dangerouslySetInnerHTML={{ __html: safeContent(blog.blogTitle) }}></h5>
-      
+    <div className="rounded-xl p-5 mb-4 transition-all duration-200 hover:scale-[1.005]"
+      style={{ background: '#1a2235', border: '1px solid rgba(255,255,255,0.07)', boxShadow: '0 4px 20px rgba(0,0,0,0.35)' }}>
+      <h5
+        className="text-base font-semibold mb-2"
+        style={{ color: '#f0f4ff' }}
+        dangerouslySetInnerHTML={{ __html: safeContent(blog.blogTitle) }}
+      />
+
       {/* Author and timestamp */}
-      <div className="flex items-center gap-3 mb-3 text-sm text-gray-500">
+      <div className="flex items-center gap-3 mb-3 text-sm" style={{ color: '#8b9ab5' }}>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
+          <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
             {getAuthorName().charAt(0).toUpperCase()}
           </div>
-          <span className="font-medium text-gray-700">{getAuthorName()}</span>
+          <span className="font-medium" style={{ color: '#c4b5fd' }}>{getAuthorName()}</span>
         </div>
-        <span className="text-gray-400">•</span>
+        <span style={{ color: '#4a5568' }}>•</span>
         <span>{formatDate(blog.createdAt)}</span>
       </div>
-      
-      <p className="text-gray-600 text-sm mb-4" dangerouslySetInnerHTML={{ __html: safeContent(snippet) + (hasMore ? '...' : '') }}></p>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm pt-3 border-t">
+
+      <p
+        className="text-sm mb-4"
+        style={{ color: '#8b9ab5', lineHeight: '1.6' }}
+        dangerouslySetInnerHTML={{ __html: safeContent(snippet) + (hasMore ? '...' : '') }}
+      />
+
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm pt-3"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
         <div className="flex items-center gap-4">
           <button
             onClick={() => onLike(blog.blogId)}
             disabled={isLiking}
             className={`font-semibold transition-all duration-200 transform hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-              isLiked 
-                ? 'text-red-600 hover:text-red-700' 
-                : 'text-pink-600 hover:text-pink-700'
+              isLiked
+                ? 'text-red-400 hover:text-red-300'
+                : 'text-pink-400 hover:text-pink-300'
             }`}
             title={isLiked ? 'Unlike' : 'Like'}
             aria-label={isLiked ? 'Unlike this blog' : 'Like this blog'}
@@ -91,11 +102,14 @@ export function BlogCard({ blog, onLike, isLiked = false, isLiking = false }) {
               </>
             )}
           </button>
-          <span className="text-gray-500">{blog.commentCount || 0} comments</span>
+          <span style={{ color: '#8b9ab5' }}>{blog.commentCount || 0} comments</span>
         </div>
         <Link
           to={`/blogs/${blog.blogId}`}
-          className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+          className="font-semibold transition-colors"
+          style={{ color: '#a78bfa' }}
+          onMouseEnter={e => e.target.style.color = '#c4b5fd'}
+          onMouseLeave={e => e.target.style.color = '#a78bfa'}
         >
           Read more →
         </Link>

@@ -32,7 +32,11 @@ export function LoginForm() {
         aria-label="Email address"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all disabled:opacity-50 text-sm"
+        style={{
+          backgroundColor: '#151c2c',
+          color: '#f0f4ff',
+        }}
       />
 
       <input
@@ -46,7 +50,11 @@ export function LoginForm() {
         aria-label="Password"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
-        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent focus:shadow-[0_0_0_3px_rgba(255,79,154,0.2)] transition-all disabled:opacity-50"
+        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all disabled:opacity-50 text-sm"
+        style={{
+          backgroundColor: '#151c2c',
+          color: '#f0f4ff',
+        }}
       />
 
       <button

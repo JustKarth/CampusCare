@@ -45,16 +45,20 @@ export function CommentForm({ blogId }) {
         onChange={handleContentChange}
         placeholder="Write a comment..."
         required
-        rows={4}
+        rows={3}
         disabled={loading}
         maxLength={VALIDATION.COMMENT_MAX_LENGTH}
-        className={`w-full px-4 py-2 rounded-lg border resize-y mb-4 transition-all disabled:opacity-50 ${
+        className={`w-full px-4 py-2.5 rounded-xl border resize-y mb-3 transition-all disabled:opacity-50 text-sm outline-none ${
           error
-            ? 'border-red-300 focus:ring-red-500'
-            : 'border-gray-300 focus:ring-pink-500'
-        } focus:outline-none focus:ring-2 focus:border-transparent`}
+            ? 'border-red-400 focus:ring-red-400'
+            : 'border-white/15 focus:ring-primary focus:border-transparent'
+        } focus:ring-2`}
+        style={{
+          backgroundColor: '#151c2c',
+          color: '#f0f4ff',
+        }}
       />
-      <p className="text-gray-500 text-xs mb-4">{content.length}/{VALIDATION.COMMENT_MAX_LENGTH} characters</p>
+      <p className="text-xs mb-4" style={{ color: '#8b9ab5' }}>{content.length}/{VALIDATION.COMMENT_MAX_LENGTH} characters</p>
       <button
         type="submit"
         disabled={loading}
