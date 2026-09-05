@@ -766,9 +766,9 @@ Current Student Name: ${studentName || 'Student'}
       model: 'gemini-3.6-flash',
       contents,
       config: {
-        systemInstruction,
+        systemInstruction: systemInstruction + `\nImportant: Always deliver complete, coherent, well-structured responses. Never stop abruptly or cut off in the middle of a sentence.`,
         temperature: 0.7,
-        maxOutputTokens: 1024,
+        maxOutputTokens: 4096,
       }
     });
   } catch (primaryErr) {
@@ -777,9 +777,9 @@ Current Student Name: ${studentName || 'Student'}
       model: 'gemini-3.7-flash',
       contents,
       config: {
-        systemInstruction,
+        systemInstruction: systemInstruction + `\nImportant: Always deliver complete, coherent, well-structured responses. Never stop abruptly or cut off in the middle of a sentence.`,
         temperature: 0.7,
-        maxOutputTokens: 1024,
+        maxOutputTokens: 4096,
       }
     });
   }

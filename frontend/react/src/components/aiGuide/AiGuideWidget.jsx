@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { apiRequest } from "../../services/apiClient";
 
-// Markdown renderer: handles **bold**, [link](url), bullet lines
+// Markdown renderer: handles **bold**, [link](url), bullet lines, and numbered lists
 function MarkdownText({ text }) {
   if (!text) return null;
   const lines = text.split("\n");
@@ -20,7 +20,7 @@ function MarkdownText({ text }) {
       } else if (match[3]) {
         parts.push(
           <a key={match.index} href={match[4]} target="_blank" rel="noopener noreferrer"
-             className="text-blue-300 underline hover:text-blue-200">{match[3]}</a>
+             className="text-sky-300 underline hover:text-sky-200">{match[3]}</a>
         );
       }
       last = match.index + match[0].length;
@@ -30,22 +30,26 @@ function MarkdownText({ text }) {
   };
 
   return (
-    <div className="space-y-0.5">
+    <div className="space-y-1">
       {lines.map((line, i) => {
         const trimmed = line.trim();
         if (!trimmed) return <div key={i} className="h-1.5" />;
-        const bullet = trimmed.match(/^[*\-]\s+(.*)|^(•)\s+(.*)/);
-        if (bullet) {
-          const content = bullet[1] || bullet[3];
+        const bulletMatch = trimmed.match(/^([*\-•]|\d+\.)\s+(.*)/);
+        if (bulletMatch) {
+          const marker = bulletMatch[1];
+          const content = bulletMatch[2];
+          const isNumber = /^\d+\./.test(marker);
           return (
-            <div key={i} className="flex gap-1.5 pl-1">
-              <span className="text-indigo-400 mt-0.5 flex-shrink-0">•</span>
-              <span className="text-gray-200 text-sm leading-relaxed">{renderInline(content)}</span>
+            <div key={i} className="flex gap-2 pl-1 py-0.5">
+              <span className={`flex-shrink-0 text-xs font-semibold ${isNumber ? 'text-sky-400 font-mono mt-0.5' : 'text-violet-400 mt-0.5'}`}>
+                {isNumber ? marker : '•'}
+              </span>
+              <span className="text-[#F8FAFC] text-xs sm:text-sm leading-relaxed">{renderInline(content)}</span>
             </div>
           );
         }
         return (
-          <p key={i} className="text-gray-200 text-sm leading-relaxed">
+          <p key={i} className="text-[#F8FAFC] text-xs sm:text-sm leading-relaxed">
             {renderInline(trimmed)}
           </p>
         );
@@ -56,9 +60,9 @@ function MarkdownText({ text }) {
 
 function TypingDots() {
   return (
-    <div className="flex items-center gap-1 px-3 py-2">
+    <div className="flex items-center gap-1.5 px-3 py-2">
       {[0, 1, 2].map((i) => (
-        <span key={i} className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce"
+        <span key={i} className="w-2 h-2 rounded-full bg-sky-400 animate-bounce"
           style={{ animationDelay: `${i * 0.15}s` }} />
       ))}
     </div>
@@ -72,6 +76,7 @@ export function AiGuideWidget() {
   // ALL hooks must be declared unconditionally at the top
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState([]);
   const [quickPrompts, setQuickPrompts] = useState([]);
   const [input, setInput] = useState("");
@@ -79,13 +84,23 @@ export function AiGuideWidget() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [error, setError] = useState(null);
 
+  const messagesContainerRef = useRef(null);
+  const lastAiMessageRef = useRef(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const hasLoadedSuggestions = useRef(false);
 
-  // Scroll to bottom whenever messages change
+  // Scroll handling: when an AI response arrives, scroll so user sees the top of it
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.sender === "user") {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      } else if (lastMsg.sender === "ai") {
+        // Bring top of the newly arrived answer into view
+        lastAiMessageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
   }, [messages, isLoading]);
 
   // Load quick prompts on first open
@@ -171,71 +186,108 @@ export function AiGuideWidget() {
       {/* Chat Window */}
       {isOpen && (
         <div
-          className="flex flex-col bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300"
+          className="flex flex-col bg-[#0F172A] border border-white/15 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300"
           style={{
-            width: "360px",
-            height: isMinimized ? 0 : "520px",
+            width: isExpanded ? "min(520px, 94vw)" : "min(410px, 92vw)",
+            height: isMinimized ? 0 : (isExpanded ? "min(680px, 86vh)" : "min(560px, 80vh)"),
             opacity: isMinimized ? 0 : 1,
             pointerEvents: isMinimized ? "none" : "auto"
           }}
         >
           {/* Header */}
-          <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-indigo-700 to-violet-700 flex-shrink-0">
+          <div
+            className="flex items-center gap-3 px-4 py-3 text-white flex-shrink-0 shadow-md"
+            style={{ background: "linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%)" }}
+          >
             <div className="relative">
-              <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-xl select-none">🤖</div>
-              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-green-400 border-2 border-indigo-700" />
+              <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-xl select-none shadow-sm">🤖</div>
+              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0F172A]" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-semibold text-sm leading-none">AI Guide</p>
-              <p className="text-indigo-200 text-xs mt-0.5">CampusCare Assistant</p>
+              <p className="text-white font-bold text-sm leading-none">AI Guide</p>
+              <p className="text-white/80 text-xs mt-0.5 truncate">CampusCare Assistant • Gemini Flash</p>
             </div>
-            <button
-              onClick={() => setIsMinimized(true)}
-              className="text-indigo-200 hover:text-white p-1 rounded transition-colors"
-              title="Minimize"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={() => { setIsOpen(false); setIsMinimized(false); }}
-              className="text-indigo-200 hover:text-white p-1 rounded transition-colors"
-              title="Close"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+
+            {/* Expand / Minimize / Close Controls */}
+            <div className="flex items-center gap-1 text-white/80">
+              <button
+                onClick={() => setIsExpanded(prev => !prev)}
+                className="p-1 rounded-lg hover:bg-white/15 hover:text-white transition-colors"
+                title={isExpanded ? "Standard view" : "Expand window"}
+              >
+                {isExpanded ? (
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 9L4 4m0 0l5 0m-5 0l0 5m6 6l5 5m0 0l-5 0m5 0l0-5" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                  </svg>
+                )}
+              </button>
+              <button
+                onClick={() => setIsMinimized(true)}
+                className="p-1 rounded-lg hover:bg-white/15 hover:text-white transition-colors"
+                title="Minimize"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={() => { setIsOpen(false); setIsMinimized(false); }}
+                className="p-1 rounded-lg hover:bg-white/15 hover:text-white transition-colors"
+                title="Close"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-3">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+          <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3.5 space-y-3">
+            {messages.map((msg, idx) => (
+              <div
+                key={msg.id}
+                ref={idx === messages.length - 1 && msg.sender === 'ai' ? lastAiMessageRef : null}
+                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+              >
                 {msg.sender === "ai" && (
-                  <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5 shadow-sm"
+                    style={{ background: 'linear-gradient(135deg, #38BDF8, #8B5CF6)' }}>
                     🤖
                   </div>
                 )}
-                <div className={`${msg.sender !== "user" ? "flex-1" : "max-w-[80%]"}`}>
-                  <div className={`rounded-2xl px-3 py-2.5 ${
-                    msg.sender === "user"
-                      ? "bg-indigo-600 text-white rounded-tr-sm"
-                      : "bg-gray-800 rounded-tl-sm"
-                  }`}>
+                <div className={`${msg.sender !== "user" ? "flex-1" : "max-w-[85%]"}`}>
+                  <div
+                    className={`rounded-2xl px-3.5 py-3 ${
+                      msg.sender === "user"
+                        ? "text-white rounded-tr-sm shadow-md"
+                        : "rounded-tl-sm shadow-md"
+                    }`}
+                    style={{
+                      background: msg.sender === "user"
+                        ? "linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%)"
+                        : "#1E293B",
+                      border: msg.sender === "user"
+                        ? "none"
+                        : "1px solid rgba(255,255,255,0.08)"
+                    }}
+                  >
                     {msg.sender === "user"
-                      ? <p className="text-sm leading-relaxed">{msg.text}</p>
+                      ? <p className="text-xs sm:text-sm leading-relaxed">{msg.text}</p>
                       : <MarkdownText text={msg.text} />
                     }
                   </div>
                   {msg.sender === "ai" && msg.actions?.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
-                      {msg.actions.map((action, idx) => (
+                      {msg.actions.map((action, actionIdx) => (
                         <button
-                          key={idx}
+                          key={actionIdx}
                           onClick={() => handleActionClick(action)}
-                          className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-700 hover:bg-indigo-600 text-gray-200 hover:text-white text-xs font-medium border border-gray-600 hover:border-indigo-500 transition-all duration-150 active:scale-95"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1E293B] hover:bg-sky-500/20 text-sky-300 hover:text-white text-xs font-semibold border border-sky-500/30 hover:border-sky-400 transition-all duration-150 active:scale-95 shadow-sm"
                         >
                           <span>{action.icon}</span>
                           <span>{action.label}</span>
@@ -249,27 +301,28 @@ export function AiGuideWidget() {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5">🤖</div>
-                <div className="bg-gray-800 rounded-2xl rounded-tl-sm"><TypingDots /></div>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 mr-2 mt-0.5"
+                  style={{ background: 'linear-gradient(135deg, #38BDF8, #8B5CF6)' }}>🤖</div>
+                <div className="rounded-2xl rounded-tl-sm bg-[#1E293B] border border-white/10"><TypingDots /></div>
               </div>
             )}
 
             {error && (
-              <div className="text-center text-xs text-red-400 py-1">{error}</div>
+              <div className="text-center text-xs text-rose-400 py-1 bg-rose-500/10 rounded-lg border border-rose-500/20">{error}</div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Quick Prompts */}
           {quickPrompts.length > 0 && messages.length <= 1 && (
-            <div className="px-3 py-2 border-t border-gray-700/60 flex-shrink-0">
-              <p className="text-gray-500 text-[10px] font-medium uppercase tracking-wider mb-1.5">Quick Questions</p>
+            <div className="px-3.5 py-2.5 border-t border-white/10 flex-shrink-0 bg-[#0F172A]">
+              <p className="text-[#94A3B8] text-[10px] font-bold uppercase tracking-wider mb-1.5">Quick Questions</p>
               <div className="flex flex-col gap-1 max-h-24 overflow-y-auto">
                 {quickPrompts.slice(0, 4).map((prompt, i) => (
                   <button
                     key={i}
                     onClick={() => sendMessage(prompt)}
-                    className="text-left text-xs text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700 px-2.5 py-1.5 rounded-lg border border-gray-700 hover:border-indigo-500 transition-all duration-150 truncate"
+                    className="text-left text-xs text-[#94A3B8] hover:text-[#F8FAFC] bg-[#1E293B] hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 hover:border-sky-400/50 transition-all duration-150 truncate"
                   >
                     {prompt}
                   </button>
@@ -279,21 +332,22 @@ export function AiGuideWidget() {
           )}
 
           {/* Input Bar */}
-          <div className="flex items-end gap-2 px-3 py-3 border-t border-gray-700 bg-gray-900 flex-shrink-0">
+          <div className="flex items-end gap-2 p-3 border-t border-white/10 bg-[#0F172A] flex-shrink-0">
             <textarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask anything about campus..."
+              placeholder="Ask anything about campus, fares, food, notes..."
               rows={1}
-              className="flex-1 bg-gray-800 text-white text-sm placeholder-gray-500 rounded-xl px-3 py-2 border border-gray-700 focus:border-indigo-500 focus:outline-none resize-none leading-relaxed max-h-20"
-              style={{ minHeight: "38px" }}
+              className="flex-1 bg-[#1E293B] text-[#F8FAFC] text-xs sm:text-sm placeholder-[#94A3B8] rounded-xl px-3.5 py-2.5 border border-white/15 focus:border-sky-400 focus:outline-none resize-none leading-relaxed max-h-24"
+              style={{ minHeight: "40px" }}
             />
             <button
               onClick={() => sendMessage()}
               disabled={!input.trim() || isLoading}
-              className="w-9 h-9 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-150 active:scale-95 flex-shrink-0"
+              className="w-10 h-10 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-150 active:scale-95 flex-shrink-0 shadow-md shadow-sky-500/25"
+              style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%)' }}
               title="Send"
             >
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -307,12 +361,13 @@ export function AiGuideWidget() {
       {/* Floating Toggle Button */}
       <button
         onClick={isOpen ? () => setIsMinimized((m) => !m) : handleOpen}
-        className="w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl bg-gradient-to-br from-indigo-600 to-violet-700 hover:from-indigo-500 hover:to-violet-600 transition-all duration-200 active:scale-95 relative select-none"
+        className="w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition-all duration-200 active:scale-95 relative select-none hover:scale-105"
+        style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%)' }}
         title={isOpen ? (isMinimized ? "Restore AI Guide" : "Minimize") : "Open AI Guide"}
       >
         <span>🤖</span>
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-gray-900">
+          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-[#0F172A]">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
