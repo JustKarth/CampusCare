@@ -58,12 +58,12 @@ export function CreateBlogForm() {
     <div
       className="rounded-2xl p-5 md:p-6 mb-6"
       style={{
-        background: '#1a2235',
+        background: '#1E293B',
         border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.35)'
+        boxShadow: '0 4px 20px rgba(0,0,0,0.28)'
       }}
     >
-      <h4 className="text-lg font-bold mb-4" style={{ color: '#f0f4ff' }}>Create New Blog</h4>
+      <h4 className="text-lg font-bold mb-4" style={{ color: '#F8FAFC' }}>Create New Blog</h4>
       <SuccessMessage message={success} onDismiss={() => setSuccess('')} className="mb-4" />
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -77,18 +77,18 @@ export function CreateBlogForm() {
             maxLength={128}
             className={`w-full px-4 py-2.5 rounded-xl border transition-all disabled:opacity-50 text-sm outline-none ${
               errors.title
-                ? 'border-red-400 focus:ring-red-400'
+                ? 'border-rose-400 focus:ring-rose-400'
                 : 'border-white/15 focus:ring-primary focus:border-transparent'
             } focus:ring-2`}
             style={{
-              backgroundColor: '#151c2c',
-              color: '#f0f4ff',
+              backgroundColor: '#0F172A',
+              color: '#F8FAFC',
             }}
           />
           {errors.title && (
-            <p className="text-red-400 text-xs mt-1">{errors.title}</p>
+            <p className="text-rose-400 text-xs mt-1">{errors.title}</p>
           )}
-          <p className="text-xs mt-1" style={{ color: '#8b9ab5' }}>{title.length}/128 characters</p>
+          <p className="text-xs mt-1" style={{ color: '#94A3B8' }}>{title.length}/128 characters</p>
         </div>
         <div>
           <textarea
@@ -100,22 +100,23 @@ export function CreateBlogForm() {
             disabled={loading}
             className={`w-full px-4 py-2.5 rounded-xl border transition-all disabled:opacity-50 text-sm outline-none ${
               errors.content
-                ? 'border-red-400 focus:ring-red-400'
+                ? 'border-rose-400 focus:ring-rose-400'
                 : 'border-white/15 focus:ring-primary focus:border-transparent'
             } focus:ring-2 resize-y`}
             style={{
-              backgroundColor: '#151c2c',
-              color: '#f0f4ff',
+              backgroundColor: '#0F172A',
+              color: '#F8FAFC',
             }}
           />
           {errors.content && (
-            <p className="text-red-400 text-xs mt-1">{errors.content}</p>
+            <p className="text-rose-400 text-xs mt-1">{errors.content}</p>
           )}
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+          className="px-6 py-2.5 text-white rounded-xl font-semibold shadow-md shadow-sky-500/20 hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+          style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%)' }}
         >
           {loading ? (
             <>

@@ -201,8 +201,8 @@ export function FarePlaceSearch({
           placeholder={placeholder}
           className="w-full px-4 py-3 pl-11 pr-10 rounded-xl border border-white/15 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           style={{
-            backgroundColor: '#1a2235',
-            color: '#f0f4ff',
+            backgroundColor: '#1E293B',
+            color: '#F8FAFC',
           }}
         />
 

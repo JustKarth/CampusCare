@@ -54,15 +54,16 @@ export function CommentForm({ blogId }) {
             : 'border-white/15 focus:ring-primary focus:border-transparent'
         } focus:ring-2`}
         style={{
-          backgroundColor: '#151c2c',
-          color: '#f0f4ff',
+          backgroundColor: '#0F172A',
+          color: '#F8FAFC',
         }}
       />
-      <p className="text-xs mb-4" style={{ color: '#8b9ab5' }}>{content.length}/{VALIDATION.COMMENT_MAX_LENGTH} characters</p>
+      <p className="text-xs mb-4" style={{ color: '#94A3B8' }}>{content.length}/{VALIDATION.COMMENT_MAX_LENGTH} characters</p>
       <button
         type="submit"
         disabled={loading}
-        className="px-6 py-2 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+        className="px-6 py-2.5 text-white rounded-xl font-semibold shadow-md shadow-sky-500/20 hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%)' }}
       >
         {loading ? (
           <>

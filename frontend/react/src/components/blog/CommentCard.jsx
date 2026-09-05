@@ -27,7 +27,7 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
     <div
       className="rounded-xl p-4 mb-3 transition-colors duration-200"
       style={{
-        backgroundColor: '#151c2c',
+        backgroundColor: '#0F172A',
         border: '1px solid rgba(255,255,255,0.08)',
       }}
     >
@@ -44,16 +44,16 @@ export function CommentCard({ comment, onDelete, isDeleting = false }) {
             )}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-semibold" style={{ color: '#c4b5fd' }}>{authorName}</span>
+                <span className="text-sm font-semibold" style={{ color: '#7DD3FC' }}>{authorName}</span>
                 {isOwner && (
                   <span className="text-xs text-primary bg-primary/20 border border-primary/30 px-2 py-0.5 rounded-full">You</span>
                 )}
               </div>
-              <p className="text-sm leading-relaxed" style={{ color: '#f0f4ff' }}>{escapeHtml(comment.commentContent)}</p>
+              <p className="text-sm leading-relaxed" style={{ color: '#F8FAFC' }}>{escapeHtml(comment.commentContent)}</p>
             </div>
           </div>
           {comment.createdAt && (
-            <p className="text-xs mt-2" style={{ color: '#8b9ab5' }}>
+            <p className="text-xs mt-2" style={{ color: '#94A3B8' }}>
               {new Date(comment.createdAt).toLocaleString()}
             </p>
           )}

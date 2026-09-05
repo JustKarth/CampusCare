@@ -32,10 +32,10 @@ export function LoginForm() {
         aria-label="Email address"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
-        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all disabled:opacity-50 text-sm"
+        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:opacity-50 text-sm"
         style={{
-          backgroundColor: '#151c2c',
-          color: '#f0f4ff',
+          backgroundColor: '#0F172A',
+          color: '#F8FAFC',
         }}
       />
 
@@ -50,10 +50,10 @@ export function LoginForm() {
         aria-label="Password"
         aria-required="true"
         aria-invalid={error ? 'true' : 'false'}
-        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all disabled:opacity-50 text-sm"
+        className="w-full px-4 py-3 rounded-xl border border-white/15 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:opacity-50 text-sm"
         style={{
-          backgroundColor: '#151c2c',
-          color: '#f0f4ff',
+          backgroundColor: '#0F172A',
+          color: '#F8FAFC',
         }}
       />
 
@@ -61,7 +61,8 @@ export function LoginForm() {
         type="submit"
         disabled={loading}
         aria-label={loading ? 'Logging in...' : 'Login'}
-        className="w-full py-3 gradient-auth text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-3 text-white rounded-xl font-semibold shadow-md shadow-sky-500/20 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        style={{ background: 'linear-gradient(135deg, #38BDF8 0%, #8B5CF6 100%)' }}
       >
         {loading ? (
           <>

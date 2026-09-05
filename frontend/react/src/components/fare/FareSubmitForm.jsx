@@ -155,8 +155,8 @@ export function FareSubmitForm({
             placeholder="e.g. 80"
             className="w-full pl-9 pr-4 py-3 rounded-xl border border-white/15 text-text-primary text-base font-bold focus:outline-none focus:ring-2 focus:ring-primary"
             style={{
-              backgroundColor: '#151c2c',
-              color: '#f0f4ff',
+              backgroundColor: '#1E293B',
+              color: '#F8FAFC',
             }}
           />
         </div>
@@ -175,8 +175,8 @@ export function FareSubmitForm({
           placeholder="e.g. Outside station they quote ₹150; walk 100m to the main gate or negotiate down to ₹80. Shared auto from Teliyarganj is ₹20."
           className="w-full px-4 py-2.5 rounded-xl border border-white/15 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           style={{
-            backgroundColor: '#151c2c',
-            color: '#f0f4ff',
+            backgroundColor: '#1E293B',
+            color: '#F8FAFC',
           }}
         />
         <span className="text-[10px] text-text-secondary block text-right mt-1">

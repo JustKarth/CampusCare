@@ -119,8 +119,8 @@ export function LocalGuidePage() {
               placeholder="Search spots, food dishes, Xerox, cafes, medicines..."
               className="w-full px-4 py-3 pl-11 rounded-xl border border-white/15 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
               style={{
-                backgroundColor: '#1a2235',
-                color: '#f0f4ff',
+                backgroundColor: '#1E293B',
+                color: '#F8FAFC',
               }}
             />
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary text-base pointer-events-none">
