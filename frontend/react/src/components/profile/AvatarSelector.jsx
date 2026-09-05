@@ -34,10 +34,10 @@ export function AvatarSelector() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Profile Avatar</h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <h3 className="text-lg font-bold text-text-primary mb-1">Profile Avatar</h3>
+        <p className="text-sm text-text-secondary">
           Choose an avatar to represent your profile. Images are loaded from the campus collection.
         </p>
       </div>
@@ -45,40 +45,41 @@ export function AvatarSelector() {
       <ErrorMessage message={error} />
 
       {/* Current Avatar Preview */}
-      <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-        <div className="text-sm font-medium text-gray-700">Current Avatar:</div>
+      <div className="flex items-center gap-4 p-4 rounded-xl border border-white/10"
+        style={{ backgroundColor: '#0F172A' }}>
+        <div className="text-sm font-semibold text-text-secondary">Current Avatar:</div>
         {currentAvatar ? (
           <div className="flex items-center gap-3">
             <img
               src={getAvatarUrl(currentAvatar)}
               alt="Current avatar"
-              className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
+              className="w-14 h-14 rounded-full object-cover border-2 border-primary shadow-md"
             />
-            <span className="text-sm text-gray-600">
+            <span className="text-sm font-semibold text-text-primary">
               {availableAvatars.find(a => a.filename === currentAvatar)?.name || currentAvatar}
             </span>
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
-              <span className="text-2xl text-gray-500">👤</span>
+            <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center">
+              <span className="text-2xl text-text-secondary">👤</span>
             </div>
-            <span className="text-sm text-gray-500">No avatar selected</span>
+            <span className="text-sm text-text-secondary">No avatar selected</span>
           </div>
         )}
       </div>
 
       {/* Avatar Selection Grid */}
       <div>
-        <div className="text-sm font-medium text-gray-700 mb-3">Available Avatars:</div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="text-sm font-semibold text-text-primary mb-3">Available Avatars:</div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
           {availableAvatars.map((avatar) => (
             <div
               key={avatar.filename}
-              className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+              className={`relative cursor-pointer rounded-xl overflow-hidden border-2 transition-all ${
                 selectedAvatar === avatar.filename
-                  ? 'border-blue-500 shadow-lg scale-105'
-                  : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                  ? 'border-primary shadow-lg shadow-sky-500/25 scale-105'
+                  : 'border-white/15 hover:border-primary/60 hover:shadow-md'
               } ${updating ? 'pointer-events-none opacity-50' : ''}`}
               onClick={() => handleAvatarSelect(avatar.filename)}
             >
@@ -87,21 +88,22 @@ export function AvatarSelector() {
                 alt={avatar.name}
                 className="w-full h-24 object-cover"
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
-                <p className="text-white text-xs font-medium text-center">{avatar.name}</p>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2">
+                <p className="text-white text-xs font-semibold text-center">{avatar.name}</p>
               </div>
               
               {/* Selection indicator */}
               {selectedAvatar === avatar.filename && (
-                <div className="absolute top-2 right-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">✓</span>
+                <div className="absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center shadow-md"
+                  style={{ background: 'linear-gradient(135deg, #38BDF8, #8B5CF6)' }}>
+                  <span className="text-white text-xs font-bold">✓</span>
                 </div>
               )}
               
               {/* Loading overlay */}
               {updating && selectedAvatar === avatar.filename && (
-                <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-                  <LoadingSpinner size="sm" className="text-blue-600" />
+                <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center">
+                  <LoadingSpinner size="sm" className="text-primary" />
                 </div>
               )}
             </div>
@@ -110,8 +112,10 @@ export function AvatarSelector() {
       </div>
 
       {/* Instructions */}
-      <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
-        <p>💡 Click on any avatar to update your profile picture. Changes are saved automatically.</p>
+      <div className="text-xs text-text-secondary p-3.5 rounded-xl border border-white/10 flex items-center gap-2"
+        style={{ backgroundColor: '#0F172A' }}>
+        <span>⚡</span>
+        <p>Click on any avatar to update your profile picture. Changes are saved automatically.</p>
       </div>
     </div>
   );
